@@ -9,13 +9,13 @@ import mapboxgl from 'mapbox-gl'
 import MapboxDraw from "@mapbox/mapbox-gl-draw"
 import mapboxPolyline from '@mapbox/polyline'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'  //it is no work !
-import 'mapbox-gl/dist/mapbox-gl.css'             // it is necessary exactly!
+import 'mapbox-gl/dist/mapbox-gl.css'                    // it is necessary exactly!
 
 import {points, line, zone} from '@/assets/geoJSON'
 
 export default {
   mounted() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g'
+    mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g' //get it et https://account.mapbox.com/
     
     let map = new mapboxgl.Map({
       container: 'map',
@@ -23,7 +23,11 @@ export default {
       center: [37.618423, 55.751244],
       zoom: 12
     })
-    
+   
+  
+  
+    //......................................................
+    //кнопки навигации
     
     //кнопочки навигации, вар 1, РАЗВЕРНУТЫЙ набор.
     // let Draw = new MapboxDraw()
@@ -49,15 +53,28 @@ export default {
       trackUserLocation: true
     })
     map.addControl(geolocate, "top-right")
-  
-  
-  
+    
+    
+    
+    
+    // ......................................................
     //произвольный маркер
-    const marker = new mapboxgl.Marker()
+    let el = document.createElement('div')
+    el.className = 'my_marker'
+    
+    const my_marker = new mapboxgl.Marker(el)  // если el не задавать, то по-умолчанию - каплевидный значек.
     .setLngLat([37.65, 55.75])
     .addTo(map)
     
+    //удалить маркер
+    // my_marker.remove()
     
+    
+    
+    // .....................................................
+    // точки, линии, зоны
+  
+    //generator et a geoJSON - http://geojson.io/#map=10/55.7553/37.7600
     
     map.on('load', function () {
       console.log('= load =')
@@ -94,7 +111,7 @@ export default {
           "line-width": 8
         }
       })
-  
+      
       map.addLayer({
         "id": "main",
         "type": "fill",
@@ -102,29 +119,59 @@ export default {
           "type": "geojson",
           "data": zone
         },
-        "layout": {
-        },
+        "layout": {},
         "paint": {
           "fill-color": "#888",
           "fill-opacity": 0.8
         }
       })
     })
-  
     
     
+    
+    //......................................................
+    // попапы - пояснялка
     let popup = new mapboxgl.Popup({
       closeButton: false,
-      closeOnClick: true
+      closeOnClick: true  // закрыать при клике аутсайд
     })
     .setLngLat([37.618425, 55.751247])
     .setHTML(`
                 <div>
-                  GOOOOOOOOOO !
+                  <div>GO!</div>
+                  <button data-action-name="add">add</button>
+                  <button data-action-name="delete">delete</button>
                 </div>
               `)
     .addTo(map)
+  
+  
     
+    
+    //......................................................
+    //обработчик события в попапе
+    let popUpNode = popup.getElement()
+    this.setNewPassPopUpEventHandler(popUpNode)
+    
+  },
+  methods: {
+    setNewPassPopUpEventHandler(node) {
+      node.onmouseover = () => {
+        console.log('onmouseover ====')
+      }
+      
+      node.onclick = (e) => {
+        const actionName = e.target.dataset.actionName     //it is from <button data-action-name="delete">
+        if (actionName)
+          console.log('actionName ====', actionName)
+        
+        actionName && console.log('actionName ====', actionName) //the same
+      }
+    }
+  
+  
+    //......................................................
+    //
     
     
     
@@ -133,6 +180,11 @@ export default {
 </script>
 
 <style>
+.my_marker {
+  width: 10px;
+  height: 20px;
+  background: red;
+}
 body {
   margin: 0;
   padding: 0;

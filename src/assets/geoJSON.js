@@ -1,3 +1,24 @@
+// export const cameraFeature = {
+//   'type': 'Feature',
+//   'geometry': {
+//     'type': 'Point',
+//     'coordinates': [camera_data.X, camera_data.Y]
+//   },
+//   'properties': {
+//     'id': camera_data.CAMERA,
+//     // 'groupId': camera_data.GROUP_ID,
+//     // 'territoryId': camera_data.TERRITORY_ID,
+//     'camera': camera_data.CAMERA,    // id камеры (как в БД)
+//     'cameraType': type?type:'stationary',
+//     'name': camera_data.CAMERA,
+//     'icon': icon?icon:'iconCamera',
+//     'azimut': camera_data.AZIMUT || 0,
+//     'place': camera_data.CAMERA_PLACE,
+//     // 'territoryName': camera_data.CAMERA_TERRITORY_NAME,
+//     // 'groupName': camera_data.CAMERA_GROUP_NAME,
+//   }
+// }
+
 export const points = {
       "type": "Feature",
       "properties": {
