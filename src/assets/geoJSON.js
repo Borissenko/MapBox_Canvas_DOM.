@@ -1,7 +1,4 @@
 export const points = {
-  "type": "FeatureCollection",
-  "features": [
-    {
       "type": "Feature",
       "properties": {
         "marker-color": "#f22121",
@@ -11,13 +8,9 @@ export const points = {
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -1402.3780059814453,
-          55.76382685625667
-        ]
+        "coordinates":
+          [37.618425, 55.751247]
       }
-    }
-  ]
 }
 
 export const line = {

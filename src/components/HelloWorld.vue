@@ -54,7 +54,7 @@ export default {
   
     //произвольный маркер
     const marker = new mapboxgl.Marker()
-    .setLngLat([37.618423, 55.751244])
+    .setLngLat([37.65, 55.75])
     .addTo(map)
     
     
@@ -70,8 +70,8 @@ export default {
           "data": points
         },
         "layout": {
-          "icon-image": "{icon}-15",
-          "text-field": "{title}",
+          "icon-image": "star",   //{icon}-15
+          // "text-field": "{title}",
           "text-font": ["Arial"],
           "text-offset": [0, 0.7],
           "text-anchor": "top"
@@ -94,22 +94,40 @@ export default {
           "line-width": 8
         }
       })
+  
+      map.addLayer({
+        "id": "main",
+        "type": "fill",
+        "source": {
+          "type": "geojson",
+          "data": zone
+        },
+        "layout": {
+        },
+        "paint": {
+          "fill-color": "#888",
+          "fill-opacity": 0.8
+        }
+      })
     })
+  
     
-    map.addLayer({
-      "id": "main",
-      "type": "fill",
-      "source": {
-        "type": "geojson",
-        "data": zone
-      },
-      "layout": {
-      },
-      "paint": {
-        "fill-color": "#888",
-        "fill-opacity": 0.8
-      }
+    
+    let popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: true
     })
+    .setLngLat([37.618425, 55.751247])
+    .setHTML(`
+                <div>
+                  GOOOOOOOOOO !
+                </div>
+              `)
+    .addTo(map)
+    
+    
+    
+    
   }
 }
 </script>
