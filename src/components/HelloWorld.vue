@@ -23,9 +23,8 @@ export default {
       center: [37.618423, 55.751244],
       zoom: 12
     })
-   
-  
-  
+    
+    
     //......................................................
     //кнопки навигации
     
@@ -55,6 +54,82 @@ export default {
     map.addControl(geolocate, "top-right")
     
     
+    //КНОПКА и функция для генерации ПОЛИГОНА.
+    //Эту кнопку можно добавлять помимо добавления кнопок масштаба with map.addControl(new mapboxgl.NavigationControl()
+    let mapboxDraw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        trash: true
+      }
+    })
+    map.addControl(mapboxDraw, 'top-right')
+    
+    this.$nextTick(() => {  // добавляем дополнительные свойства у выше созданных кнопок.
+      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").title = "Полигон"
+      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").classList.add('none')
+      
+      document.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").title = "Удалить полигон"
+      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").classList.add('none')
+      
+      this.$el.querySelector(".mapbox-gl-draw_trash_all").classList.add('none')
+    })
+    
+    map.addControl(new mapboxDrawDeleteAll(mapboxDraw, this), 'top-right');
+    
+    
+    //КНОПКА "УДАЛИТЬ все полигоны"
+    class mapboxDrawDeleteAll {
+      constructor(_context, _component_context) {
+        this._context = _context;
+        this._component_context = _component_context;
+      }
+      
+      onAdd(map) {
+        this.map = map;
+        this.container = document.createElement('div');
+        this.container.className = 'mapbox-gl-draw_trash_all mapboxgl-ctrl';
+        this.container.title = 'Удалить все территории';
+        
+        this._setupUI();
+        return this.container;
+      }
+      
+      onRemove() {
+        this.container.parentNode.removeChild(this.container);
+        this.map = undefined;
+      }
+      
+      _setupUI() {
+        this.container.addEventListener('click', () => this._deleteAllPoly())
+      }
+      
+      _deleteAllPoly() {
+        this._context.deleteAll();
+        this._component_context.polygons = {};
+      }
+    }
+    
+    this.map.addControl(new mapboxDrawDeleteAll(this.MapboxDraw, this), 'top-right');
+    
+    
+    // сохранение нарисованного полигона
+    // this.map.on('style.load', () => {
+      this.map.on('draw.create', function (e) {
+        let polygons = []
+        
+        let id = e.features[0].id;
+        polygons[id] = e.features[0]
+        
+        console.log('')
+        
+      })
+    // })
+    
+    
+    // ......................................................
+    // Навигация по карте при помощи клавиатуры
+    this.map.keyboard.enable()
     
     
     // ......................................................
@@ -70,10 +145,24 @@ export default {
     // my_marker.remove()
     
     
+    //клик по маркеру и его сохранение
+    this.map.on('click', 'cameras', (e) => {
+      let selectedCameraId = this.map.queryRenderedFeatures(e.point)[0].properties.id;
+      // найдём объект с данной камерой и вернём его
+      let index = -1;
+      for (let i = 0; i < this.cameraList.length; i++) {
+        if (this.cameraList[i].CAMERA == selectedCameraId) {
+          index = i;
+          break;
+        }
+      }
+      this.$emit('clickedCamera', this.cameraList[index]);
+    })
+    
     
     // .....................................................
     // точки, линии, зоны
-  
+    
     //generator et a geoJSON - http://geojson.io/#map=10/55.7553/37.7600
     
     map.on('load', function () {
@@ -128,9 +217,8 @@ export default {
     })
     
     
-    
     //......................................................
-    // попапы - пояснялка
+    // попапы ( пояснялка ).
     let popup = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: true  // закрыать при клике аутсайд
@@ -144,8 +232,6 @@ export default {
                 </div>
               `)
     .addTo(map)
-  
-  
     
     
     //......................................................
@@ -168,11 +254,10 @@ export default {
         actionName && console.log('actionName ====', actionName) //the same
       }
     }
-  
-  
+    
+    
     //......................................................
     //
-    
     
     
   }
@@ -185,6 +270,7 @@ export default {
   height: 20px;
   background: red;
 }
+
 body {
   margin: 0;
   padding: 0;
