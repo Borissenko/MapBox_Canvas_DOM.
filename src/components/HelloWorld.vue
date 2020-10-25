@@ -56,6 +56,24 @@ export default {
     
     
     
+    //Кнопка и функция для генерации ПОЛИГОНА.
+    let mapboxDraw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        trash: true
+      }
+    })
+    map.addControl(mapboxDraw, 'top-right')
+
+    this.$nextTick(() => {  // добавляем свои свойства к стандартно созданным контролам на карте
+      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").title = "Полигон"
+      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").classList.add('none')
+      // document.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").title = "Удалить полигон"
+    })
+    
+    
+    
     
     // ......................................................
     //произвольный маркер
@@ -130,7 +148,7 @@ export default {
     
     
     //......................................................
-    // попапы - пояснялка
+    // попапы ( пояснялка ).
     let popup = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: true  // закрыать при клике аутсайд

@@ -13,6 +13,10 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 http://geojson.io/
 
 
+# тоже нужная штучка.
+@mapbox/polyline
+
+
 
 
 
