@@ -65,89 +65,90 @@ export default {
     })
     map.addControl(mapboxDraw, 'top-right')
     
-    this.$nextTick(() => {  // добавляем дополнительные свойства у выше созданных кнопок.
+    this.$nextTick(() => {  // добавляем/удаляем дополнительные свойства и стили у выше созданных кнопок.
       this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").title = "Полигон"
       this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").classList.add('none')
       
       document.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").title = "Удалить полигон"
       this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").classList.add('none')
-      
-      this.$el.querySelector(".mapbox-gl-draw_trash_all").classList.add('none')
-    })
-    
-    map.addControl(new mapboxDrawDeleteAll(mapboxDraw, this), 'top-right');
+  
+      // this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").classList.remove('none');
+      })
     
     
     //КНОПКА "УДАЛИТЬ все полигоны"
-    class mapboxDrawDeleteAll {
-      constructor(_context, _component_context) {
-        this._context = _context;
-        this._component_context = _component_context;
-      }
-      
-      onAdd(map) {
-        this.map = map;
-        this.container = document.createElement('div');
-        this.container.className = 'mapbox-gl-draw_trash_all mapboxgl-ctrl';
-        this.container.title = 'Удалить все территории';
-        
-        this._setupUI();
-        return this.container;
-      }
-      
-      onRemove() {
-        this.container.parentNode.removeChild(this.container);
-        this.map = undefined;
-      }
-      
-      _setupUI() {
-        this.container.addEventListener('click', () => this._deleteAllPoly())
-      }
-      
-      _deleteAllPoly() {
-        this._context.deleteAll();
-        this._component_context.polygons = {};
-      }
-    }
-    
-    this.map.addControl(new mapboxDrawDeleteAll(this.MapboxDraw, this), 'top-right');
-    
-    
-    // сохранение нарисованного полигона
-    // this.map.on('style.load', () => {
-      this.map.on('draw.create', function (e) {
-        let polygons = []
-        
-        let id = e.features[0].id;
-        polygons[id] = e.features[0]
-        
-        console.log('')
-        
-      })
-    // })
+    // class mapboxDrawDeleteAll {
+    //   constructor(_context, _component_context) {
+    //     this._context = _context;
+    //     this._component_context = _component_context;
+    //   }
+    //
+    //   onAdd(map) {
+    //     this.map = map;
+    //     this.container = document.createElement('div');
+    //     this.container.className = 'mapbox-gl-draw_trash_all mapboxgl-ctrl';
+    //     this.container.title = 'Удалить все территории';
+    //
+    //     this._setupUI();
+    //     return this.container;
+    //   }
+    //
+    //   onRemove() {
+    //     this.container.parentNode.removeChild(this.container);
+    //     this.map = undefined;
+    //   }
+    //
+    //   _setupUI() {
+    //     this.container.addEventListener('click', () => this._deleteAllPoly())
+    //   }
+    //
+    //   _deleteAllPoly() {
+    //     this._context.deleteAll();
+    //     this._component_context.polygons = {};
+    //   }
+    // }
+    //
+    // map.addControl(new mapboxDrawDeleteAll(mapboxDraw, this), 'top-right');
     
     
     // ......................................................
+    //ОБРАБОТКА НАРИСОВАННОГО ПОЛИГОНА
+    // map.on('style.load', () => {
+    let polygons = []
+    
+    // сохранение нарисованного полигона
+    map.on('draw.create', function (e) {  //срабатывает при нажатии Enterпосле нарисования полигона.
+      
+      let id = e.features[0].id;
+      polygons[id] = e.features[0]
+      
+      console.log('e.features ====', e.features)
+      console.log('polygons ====', polygons)
+      
+    })
+    
+    //УДАЛЕНИЕ ВЕДЕЛЕННОГО ПОЛИГОНА ПРИ КЛИКЕ НА контрол "trash".
+    map.on('draw.delete', function (e) {
+      console.log('e.features ====', e.features[0])
+      e.features.forEach(delPoly => {
+        delete polygons[delPoly.id]
+      })
+    })
+    // })
+  
+  
+    //ЗАМЕНА сохраненного в polygons полигона на обновленный когда у существующего полигона добавляешь/двигаешь точки.
+    map.on('draw.update', function (e) {
+      console.log('draw.update =====', e.features)
+      polygons[e.features[0].id] = e.features[0]
+    })
+  
+  
+  
+  
+    // ......................................................
     // Навигация по карте при помощи клавиатуры
-    this.map.keyboard.enable()
-    
-    //Кнопка и функция для генерации ПОЛИГОНА.
-    let mapboxDraw = new MapboxDraw({
-      displayControlsDefault: false,
-      controls: {
-        polygon: true,
-        trash: true
-      }
-    })
-    map.addControl(mapboxDraw, 'top-right')
-
-    this.$nextTick(() => {  // добавляем свои свойства к стандартно созданным контролам на карте
-      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").title = "Полигон"
-      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").classList.add('none')
-      // document.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").title = "Удалить полигон"
-    })
-    
-    
+    map.keyboard.enable()
     
     
     // ......................................................
@@ -164,7 +165,7 @@ export default {
     
     
     //клик по маркеру и его сохранение
-    this.map.on('click', 'cameras', (e) => {
+    map.on('click', 'cameras', (e) => {
       let selectedCameraId = this.map.queryRenderedFeatures(e.point)[0].properties.id;
       // найдём объект с данной камерой и вернём его
       let index = -1;
