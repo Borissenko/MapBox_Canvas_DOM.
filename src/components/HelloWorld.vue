@@ -110,44 +110,32 @@ export default {
       }
     }
     
-    this.map.addControl(new mapboxDrawDeleteAll(this.MapboxDraw, this), 'top-right');
-    
-    
+    map.addControl(new mapboxDrawDeleteAll(mapboxDraw, this), 'top-right');
+  
+  
+  
+  
+    // ......................................................
     // сохранение нарисованного полигона
-    // this.map.on('style.load', () => {
-      this.map.on('draw.create', function (e) {
+    // map.on('style.load', () => {
+      map.on('draw.create', function (e) {
         let polygons = []
         
         let id = e.features[0].id;
         polygons[id] = e.features[0]
         
-        console.log('')
+        console.log('e.features ====', e.features)
+        console.log('polygons ====', polygons)
         
       })
     // })
     
     
+    
+    
     // ......................................................
     // Навигация по карте при помощи клавиатуры
     this.map.keyboard.enable()
-    
-    //Кнопка и функция для генерации ПОЛИГОНА.
-    let mapboxDraw = new MapboxDraw({
-      displayControlsDefault: false,
-      controls: {
-        polygon: true,
-        trash: true
-      }
-    })
-    map.addControl(mapboxDraw, 'top-right')
-
-    this.$nextTick(() => {  // добавляем свои свойства к стандартно созданным контролам на карте
-      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").title = "Полигон"
-      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").classList.add('none')
-      // document.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").title = "Удалить полигон"
-    })
-    
-    
     
     
     // ......................................................
