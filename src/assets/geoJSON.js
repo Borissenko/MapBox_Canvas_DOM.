@@ -1,9 +1,16 @@
 // export const cameraFeature = {
 //   'type': 'Feature',
-//   'geometry': {
-//     'type': 'Point',
-//     'coordinates': [camera_data.X, camera_data.Y]
-//   },
+// 'geometry'
+// :
+// {
+//   'type'
+// :
+//   'Point',
+//     'coordinates'
+// :
+//   [camera_data.X, camera_data.Y]
+// }
+// ,
 //   'properties': {
 //     'id': camera_data.CAMERA,
 //     // 'groupId': camera_data.GROUP_ID,
@@ -20,46 +27,60 @@
 // }
 
 export const points = {
-      "type": "Feature",
-      "properties": {
-        "marker-color": "#f22121",
-        "marker-size": "medium",
-        "icon": "star",
-        "title": "Привет!"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates":
-          [37.618425, 55.751247]
-      }
+  "type": "Feature",
+  "properties": {
+    "marker-color": "#f22121",
+    "marker-size": "medium",
+    "icon": "star",
+    "title": "Привет!"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates":
+      [37.618425, 55.751247]
+  }
 }
 
 export const line = {
-    "type": "Feature",
-    "properties": {},
-    "geometry": {
-      "type": "LineString",   //"Polygon" for zone.
-      "coordinates": [
-        [
-          -1402.3840141296387,
-          55.76488919564486
-        ],
-        [
-          -1402.3675346374512,
-          55.75880449639896
-        ],
-        [
-          -1402.3658180236816,
-          55.761991838227885
-        ],
-        [
-          -1402.3707962036133,
-          55.76324738620863
-        ]
+  "type": "Feature",
+  "properties": {},
+  "geometry": {
+    "type": "LineString",   //"Polygon" for zone.
+    "coordinates": [
+      [
+        -1402.3840141296387,
+        55.76488919564486
+      ],
+      [
+        -1402.3675346374512,
+        55.75880449639896
+      ],
+      [
+        -1402.3658180236816,
+        55.761991838227885
+      ],
+      [
+        -1402.3707962036133,
+        55.76324738620863
       ]
-    }
+    ]
+  }
 }
 
-export const zone = {
-
+export const polygon = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [37.65, 55.75],[37.66, 55.75],[37.65, 55.77],[37.65, 55.75]
+          ]
+        ]
+      }
+    }
+  ]
 }

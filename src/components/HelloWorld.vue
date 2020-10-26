@@ -11,7 +11,7 @@ import mapboxPolyline from '@mapbox/polyline'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'  //it is no work !
 import 'mapbox-gl/dist/mapbox-gl.css'                    // it is necessary exactly!
 
-import {points, line, zone} from '@/assets/geoJSON'
+import {points, line, polygon} from '@/assets/geoJSON'
 
 export default {
   mounted() {
@@ -71,9 +71,9 @@ export default {
       
       document.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").title = "Удалить полигон"
       this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").classList.add('none')
-  
+      
       // this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").classList.remove('none');
-      })
+    })
     
     
     //КНОПКА "УДАЛИТЬ все полигоны"
@@ -118,13 +118,8 @@ export default {
     
     // сохранение нарисованного полигона
     map.on('draw.create', function (e) {  //срабатывает при нажатии Enterпосле нарисования полигона.
-      
       let id = e.features[0].id;
       polygons[id] = e.features[0]
-      
-      console.log('e.features ====', e.features)
-      console.log('polygons ====', polygons)
-      
     })
     
     //УДАЛЕНИЕ ВЕДЕЛЕННОГО ПОЛИГОНА ПРИ КЛИКЕ НА контрол "trash".
@@ -135,17 +130,15 @@ export default {
       })
     })
     // })
-  
-  
+    
+    
     //ЗАМЕНА сохраненного в polygons полигона на обновленный когда у существующего полигона добавляешь/двигаешь точки.
     map.on('draw.update', function (e) {
       console.log('draw.update =====', e.features)
       polygons[e.features[0].id] = e.features[0]
     })
-  
-  
-  
-  
+    
+    
     // ......................................................
     // Навигация по карте при помощи клавиатуры
     map.keyboard.enable()
@@ -225,7 +218,7 @@ export default {
         "type": "fill",
         "source": {
           "type": "geojson",
-          "data": zone
+          "data": polygon
         },
         "layout": {},
         "paint": {
@@ -235,8 +228,93 @@ export default {
       })
     })
     
+    // ....
+    
+    // map.addLayer({
+    //   'id': '_point',
+    //   'source': '_point',
+    //   'type': 'symbol',
+    //   'layout': {
+    //     'icon-image': 'carIcon',
+    //     'icon-size': 1.5,
+    //     'icon-rotate': ['get', 'bearing'],
+    //     'icon-rotation-alignment': 'map',
+    //     'icon-allow-overlap': true,
+    //     'icon-ignore-placement': true
+    //   }
+    // })
+    
+    
+    // map.addLayer({
+    //   'id': id,
+    //   'type': 'line',
+    //   'source': {
+    //     'type': 'geojson',
+    //     'data': {
+    //       'type': 'FeatureCollection',
+    //       'features': featureCollection
+    //     }
+    //   },
+    //   'paint': {
+    //     'line-width': 3,
+    //     // Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
+    //     // to set the line-color to a feature property value.
+    //     'line-color': ['get', 'color'] //color
+    //   }
+    // })
+    
+    
+    // map.addLayer({
+    //   'id': 'userPoly',
+    //   'type': 'fill',
+    //   'source': 'userPoly',
+    //   'layout': {},
+    //   'paint': {
+    //     'fill-color': '#409EFF',
+    //     'fill-opacity': 0.15
+    //   }
+    // })
+    
+    //а еще есть map.getLayer({})
+    
     
     //......................................................
+    
+    // let polygonsToAdd = {
+    //   "type": "FeatureCollection",
+    //   "features": [
+    //     Object.values(polygons)
+    //   ]
+    // }
+    // map.MapboxDraw.add(polygonsToAdd)
+    
+    
+    //......................................................
+    //Добавление полигона при загрузке
+    //РАБОТАЕТ!
+    map.addSource('selectedGPoly', {
+      'type': 'geojson',
+      'data': polygon
+    })
+    
+    map.addLayer({
+      'id': 'selectedGPoly',
+      'type': 'fill',
+      'source': 'selectedGPoly',
+      'layout': {},
+      'paint': {
+        'fill-color': '#409EFF',
+        'fill-opacity': 0.8
+      }
+    })
+    
+    this.flyToPoly(Object.values(polygon).flatMap(f => f.geometry.coordinates[0]));
+    console.log('fly =====', Object.values(polygons).flatMap(f => f.geometry.coordinates[0]))
+    
+    
+    //......................................................
+    //......................................................
+    
     // попапы ( пояснялка ).
     let popup = new mapboxgl.Popup({
       closeButton: false,
@@ -272,13 +350,21 @@ export default {
         
         actionName && console.log('actionName ====', actionName) //the same
       }
+    },
+    flyToPoly(coordinates) {
+      return new Promise((resolve, reject) => {
+        if (coordinates.length) {
+          let bounds = coordinates.reduce(function (bounds, coord) {
+            return bounds.extend(coord);
+          }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+          
+          map.fitBounds(bounds, {
+            padding: 80
+          })
+          resolve()
+        }
+      })
     }
-    
-    
-    //......................................................
-    //
-    
-    
   }
 }
 </script>
