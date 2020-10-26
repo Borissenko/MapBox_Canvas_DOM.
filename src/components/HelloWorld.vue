@@ -296,8 +296,8 @@ export default {
       'type': 'geojson',
       'data': polygon
     })
-    
-    map.addLayer({
+
+    map.addLayer({     //что-то стиль - не принимается.... Надо Ут.
       'id': 'selectedGPoly',
       'type': 'fill',
       'source': 'selectedGPoly',
@@ -307,8 +307,9 @@ export default {
         'fill-opacity': 0.8
       }
     })
-    
-    this.flyToPoly(Object.values(polygon).flatMap(f => f.geometry.coordinates[0]));
+  
+    console.log('HHHHH --')   //  что-то не работает....
+    this.flyToPoly(Object.values(polygon).flatMap(f => f.geometry.coordinates[0]))
     console.log('fly =====', Object.values(polygons).flatMap(f => f.geometry.coordinates[0]))
     
     
@@ -354,9 +355,13 @@ export default {
     flyToPoly(coordinates) {
       return new Promise((resolve, reject) => {
         if (coordinates.length) {
-          let bounds = coordinates.reduce(function (bounds, coord) {
-            return bounds.extend(coord);
-          }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+          let bounds = coordinates.reduce(
+            function (bounds, coord) {
+              return bounds.extend(coord)
+            },
+            new mapboxgl.LngLatBounds(coordinates[0],
+              coordinates[0]
+            ))
           
           map.fitBounds(bounds, {
             padding: 80
@@ -374,6 +379,11 @@ export default {
   width: 10px;
   height: 20px;
   background: red;
+}
+
+.none {
+  margin: 0;
+  padding: 0;
 }
 
 body {
