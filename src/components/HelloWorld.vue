@@ -54,8 +54,23 @@ export default {
     map.addControl(geolocate, "top-right")
     
     
-    //КНОПКА и функция для генерации ПОЛИГОНА.
+    //КНОПКА и функция для ГЕНЕРАЦИИ ПОЛИГОНА.
     //Эту кнопку можно добавлять помимо добавления кнопок масштаба with map.addControl(new mapboxgl.NavigationControl()
+    //A-вариант)
+
+    var draw = mapboxgl.Draw({    // create polygon and trash control
+      drawing: true,
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        trash: true
+      }
+    })
+    map.addControl(draw) // add control to map
+    draw.remove()        // remove polygon and trash control from map
+    
+    
+    //B-вариант)
     let mapboxDraw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
@@ -111,16 +126,27 @@ export default {
     // map.addControl(new mapboxDrawDeleteAll(mapboxDraw, this), 'top-right');
     
     
+    
+    
+    
+    
+    
     // ......................................................
     //ОБРАБОТКА НАРИСОВАННОГО ПОЛИГОНА
     // map.on('style.load', () => {
     let polygons = []
+    var _this = this  //внутри колбеков у map.on НЕТ ДОСТУПА к this компонента! this надо пробрасывать!
     
     // сохранение нарисованного полигона
-    map.on('draw.create', function (e) {  //срабатывает при нажатии Enterпосле нарисования полигона.
+    map.on('draw.create', function (e) {  //срабатывает при нажатии Enter после нарисования полигона.
       let id = e.features[0].id;
       polygons[id] = e.features[0]
     })
+    
+    //обновление полигона
+    this.map.on('draw.update', function (e) {
+      polygons[e.features[0].id] = e.features[0]
+    });
     
     //УДАЛЕНИЕ ВЕДЕЛЕННОГО ПОЛИГОНА ПРИ КЛИКЕ НА контрол "trash".
     map.on('draw.delete', function (e) {
@@ -137,6 +163,57 @@ export default {
       console.log('draw.update =====', e.features)
       polygons[e.features[0].id] = e.features[0]
     })
+    
+    
+    //Отрисовка ранее сохраненных полигонов
+    let polygonsFeatures = [
+      {
+        geometry: {
+          coordinates: Array,
+          type: "Polygon"
+        },
+        id: "1261",
+        properties: {},
+        type: "Feature"
+      },
+    ]
+    
+    let polygonsToAdd = {
+      "type": "FeatureCollection",
+      "features": polygonsFeatures
+    }
+    
+    MapboxDraw.add(polygonsToAdd);
+    let polys = this.$refs.map.MapboxDraw.getAll().features;
+    polys.forEach(p => {
+      polygonsFeatures[p.id] = p;
+    })
+  
+    function selectedPolygons(polygons) {
+      this.selectedPolygonsSet = Object.assign({},polygons);
+    }
+    
+    selectedPolygons(polygonsFeatures);
+  
+    /**
+     * Fly map to array of coordinates
+     * @param {Array} coordinates array of coordinates
+     */
+    function flyToPoly (coordinates) {
+      return new Promise((resolve, reject) => {
+        if (coordinates.length) {
+          var bounds = coordinates.reduce(function(bounds, coord) {
+            return bounds.extend(coord);
+          }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+        
+          this.map.fitBounds(bounds, {
+            padding: 80
+          });
+          resolve();
+        }
+      })
+    }
+    flyToPoly(polys.flatMap(f => f.geometry.coordinates[0]))
     
     
     // ......................................................
@@ -296,7 +373,7 @@ export default {
       'type': 'geojson',
       'data': polygon
     })
-
+    
     map.addLayer({     //что-то стиль - не принимается.... Надо Ут.
       'id': 'selectedGPoly',
       'type': 'fill',
@@ -307,7 +384,7 @@ export default {
         'fill-opacity': 0.8
       }
     })
-  
+    
     console.log('HHHHH --')   //  что-то не работает....
     this.flyToPoly(Object.values(polygon).flatMap(f => f.geometry.coordinates[0]))
     console.log('fly =====', Object.values(polygons).flatMap(f => f.geometry.coordinates[0]))
@@ -335,7 +412,14 @@ export default {
     //......................................................
     //обработчик события в попапе
     let popUpNode = popup.getElement()
-    this.setNewPassPopUpEventHandler(popUpNode)
+    this.setNewPassPopUpEventHandler(popUpNode) //функция описана ниже, в methods().
+    
+    
+    //......................................................
+    //ПОЛЕЗНЫЕ ФУНКЦИИ
+    MapboxDraw.deleteAll()
+    map.resize()
+    
     
   },
   methods: {
