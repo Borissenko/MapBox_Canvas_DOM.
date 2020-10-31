@@ -1,3 +1,43 @@
+export const points = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 22,
+        "marker-color": "#f22121",
+        "marker-size": "medium",
+        "icon": "star",
+        "title": "Привет!"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates":
+          [37.65, 55.75]
+      }
+    }
+  ]
+}
+
+export const polygon = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [37.65, 55.75],[37.66, 55.75],[37.65, 55.77],[37.65, 55.75]
+          ]
+        ]
+      }
+    }
+  ]
+}
+
+
 // export const cameraFeature = {
 //   'type': 'Feature',
 // 'geometry'
@@ -26,20 +66,6 @@
 //   }
 // }
 
-export const points = {
-  "type": "Feature",
-  "properties": {
-    "marker-color": "#f22121",
-    "marker-size": "medium",
-    "icon": "star",
-    "title": "Привет!"
-  },
-  "geometry": {
-    "type": "Point",
-    "coordinates":
-      [37.618425, 55.751247]
-  }
-}
 
 export const line = {
   "type": "Feature",
@@ -65,22 +91,4 @@ export const line = {
       ]
     ]
   }
-}
-
-export const polygon = {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [37.65, 55.75],[37.66, 55.75],[37.65, 55.77],[37.65, 55.75]
-          ]
-        ]
-      }
-    }
-  ]
 }

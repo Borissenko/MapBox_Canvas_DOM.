@@ -6,17 +6,16 @@
 
 <script>
 import mapboxgl from 'mapbox-gl'
-import MapboxDraw from "@mapbox/mapbox-gl-draw"
-import mapboxPolyline from '@mapbox/polyline'
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'  //it is no work !
 import 'mapbox-gl/dist/mapbox-gl.css'                    // it is necessary exactly!
+import MapboxDraw from "@mapbox/mapbox-gl-draw"
+import mapboxPolyline from '@mapbox/polyline'
 
 import {points, line, polygon} from '@/assets/geoJSON'
 
 export default {
   mounted() {
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g' //get it et https://account.mapbox.com/
-    
     let map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v8',
@@ -25,427 +24,33 @@ export default {
     })
     
     
-    //......................................................
-    //кнопки навигации
-    
-    //кнопочки навигации, вар 1, РАЗВЕРНУТЫЙ набор.
-    // let Draw = new MapboxDraw()
-    // map.addControl(Draw, 'top-right')
-    
-    //кнопочки навигации, вар 2.
-    // map.addControl(new mapboxgl.NavigationControl(),'top-right')
-    map.addControl(new mapboxgl.NavigationControl({  // или
-      showCompass: true,
-      showZoom: true
-    }), 'top-right')
-    
-    //кнопочки навигации, вар 3.
-    // const nav = new mapboxgl.NavigationControl();
-    // map.addControl(nav, "top-right")
     
     
-    //кнопка для перехода в точку, где ты сейчас находишься
-    const geolocate = new mapboxgl.GeolocateControl({  //This locates the user on the map based on the browser's geolocation API.
-      positionOptions: {
-        enableHighAccuracy: true
-      },
-      trackUserLocation: true
-    })
-    map.addControl(geolocate, "top-right")
-    
-    
-    //КНОПКА и функция для ГЕНЕРАЦИИ ПОЛИГОНА.
-    //Эту кнопку можно добавлять помимо добавления кнопок масштаба with map.addControl(new mapboxgl.NavigationControl()
-    //A-вариант)
-
-    var draw = mapboxgl.Draw({    // create polygon and trash control
-      drawing: true,
-      displayControlsDefault: false,
-      controls: {
-        polygon: true,
-        trash: true
-      }
-    })
-    map.addControl(draw) // add control to map
-    draw.remove()        // remove polygon and trash control from map
-    
-    
-    //B-вариант)
-    let mapboxDraw = new MapboxDraw({
-      displayControlsDefault: false,
-      controls: {
-        polygon: true,
-        trash: true
-      }
-    })
-    map.addControl(mapboxDraw, 'top-right')
-    
-    this.$nextTick(() => {  // добавляем/удаляем дополнительные свойства и стили у выше созданных кнопок.
-      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").title = "Полигон"
-      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon").classList.add('none')
-      
-      document.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").title = "Удалить полигон"
-      this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").classList.add('none')
-      
-      // this.$el.querySelector(".mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_trash").classList.remove('none');
-    })
-    
-    
-    //КНОПКА "УДАЛИТЬ все полигоны"
-    // class mapboxDrawDeleteAll {
-    //   constructor(_context, _component_context) {
-    //     this._context = _context;
-    //     this._component_context = _component_context;
-    //   }
-    //
-    //   onAdd(map) {
-    //     this.map = map;
-    //     this.container = document.createElement('div');
-    //     this.container.className = 'mapbox-gl-draw_trash_all mapboxgl-ctrl';
-    //     this.container.title = 'Удалить все территории';
-    //
-    //     this._setupUI();
-    //     return this.container;
-    //   }
-    //
-    //   onRemove() {
-    //     this.container.parentNode.removeChild(this.container);
-    //     this.map = undefined;
-    //   }
-    //
-    //   _setupUI() {
-    //     this.container.addEventListener('click', () => this._deleteAllPoly())
-    //   }
-    //
-    //   _deleteAllPoly() {
-    //     this._context.deleteAll();
-    //     this._component_context.polygons = {};
-    //   }
-    // }
-    //
-    // map.addControl(new mapboxDrawDeleteAll(mapboxDraw, this), 'top-right');
-    
-    
-    
-    
-    
-    
-    
-    // ......................................................
-    //ОБРАБОТКА НАРИСОВАННОГО ПОЛИГОНА
-    // map.on('style.load', () => {
-    let polygons = []
-    var _this = this  //внутри колбеков у map.on НЕТ ДОСТУПА к this компонента! this надо пробрасывать!
-    
-    // сохранение нарисованного полигона
-    map.on('draw.create', function (e) {  //срабатывает при нажатии Enter после нарисования полигона.
-      let id = e.features[0].id;
-      polygons[id] = e.features[0]
-    })
-    
-    //обновление полигона
-    this.map.on('draw.update', function (e) {
-      polygons[e.features[0].id] = e.features[0]
-    });
-    
-    //УДАЛЕНИЕ ВЕДЕЛЕННОГО ПОЛИГОНА ПРИ КЛИКЕ НА контрол "trash".
-    map.on('draw.delete', function (e) {
-      console.log('e.features ====', e.features[0])
-      e.features.forEach(delPoly => {
-        delete polygons[delPoly.id]
-      })
-    })
-    // })
-    
-    
-    //ЗАМЕНА сохраненного в polygons полигона на обновленный когда у существующего полигона добавляешь/двигаешь точки.
-    map.on('draw.update', function (e) {
-      console.log('draw.update =====', e.features)
-      polygons[e.features[0].id] = e.features[0]
-    })
-    
-    
-    //Отрисовка ранее сохраненных полигонов
-    let polygonsFeatures = [
-      {
-        geometry: {
-          coordinates: Array,
-          type: "Polygon"
-        },
-        id: "1261",
-        properties: {},
-        type: "Feature"
-      },
-    ]
-    
-    let polygonsToAdd = {
-      "type": "FeatureCollection",
-      "features": polygonsFeatures
-    }
-    
-    MapboxDraw.add(polygonsToAdd);
-    let polys = this.$refs.map.MapboxDraw.getAll().features;
-    polys.forEach(p => {
-      polygonsFeatures[p.id] = p;
-    })
-  
-    function selectedPolygons(polygons) {
-      this.selectedPolygonsSet = Object.assign({},polygons);
-    }
-    
-    selectedPolygons(polygonsFeatures);
-  
-    /**
-     * Fly map to array of coordinates
-     * @param {Array} coordinates array of coordinates
-     */
-    function flyToPoly (coordinates) {
-      return new Promise((resolve, reject) => {
-        if (coordinates.length) {
-          var bounds = coordinates.reduce(function(bounds, coord) {
-            return bounds.extend(coord);
-          }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-        
-          this.map.fitBounds(bounds, {
-            padding: 80
-          });
-          resolve();
-        }
-      })
-    }
-    flyToPoly(polys.flatMap(f => f.geometry.coordinates[0]))
-    
-    
-    // ......................................................
-    // Навигация по карте при помощи клавиатуры
-    map.keyboard.enable()
-    
-    
-    // ......................................................
-    //произвольный маркер
-    let el = document.createElement('div')
-    el.className = 'my_marker'
-    
-    const my_marker = new mapboxgl.Marker(el)  // если el не задавать, то по-умолчанию - каплевидный значек.
-    .setLngLat([37.65, 55.75])
-    .addTo(map)
-    
-    //удалить маркер
-    // my_marker.remove()
-    
-    
-    //клик по маркеру и его сохранение
-    map.on('click', 'cameras', (e) => {
-      let selectedCameraId = this.map.queryRenderedFeatures(e.point)[0].properties.id;
-      // найдём объект с данной камерой и вернём его
-      let index = -1;
-      for (let i = 0; i < this.cameraList.length; i++) {
-        if (this.cameraList[i].CAMERA == selectedCameraId) {
-          index = i;
-          break;
-        }
-      }
-      this.$emit('clickedCamera', this.cameraList[index]);
-    })
-    
-    
-    // .....................................................
-    // точки, линии, зоны
-    
-    //generator et a geoJSON - http://geojson.io/#map=10/55.7553/37.7600
-    
-    map.on('load', function () {
-      console.log('= load =')
-      
-      map.addLayer({
-        "id": "points",
-        "type": "symbol",
-        "source": {
-          "type": "geojson",
-          "data": points
-        },
-        "layout": {
-          "icon-image": "star",   //{icon}-15
-          // "text-field": "{title}",
-          "text-font": ["Arial"],
-          "text-offset": [0, 0.7],
-          "text-anchor": "top"
-        }
-      })
-      
-      map.addLayer({
-        "id": "route",
-        "type": "line",
-        "source": {
-          "type": "geojson",
-          "data": line
-        },
-        "layout": {
-          "line-join": "round",
-          "line-cap": "round"
-        },
-        "paint": {
-          "line-color": "#888",
-          "line-width": 8
-        }
-      })
-      
-      map.addLayer({
-        "id": "main",
-        "type": "fill",
-        "source": {
-          "type": "geojson",
-          "data": polygon
-        },
-        "layout": {},
-        "paint": {
-          "fill-color": "#888",
-          "fill-opacity": 0.8
-        }
-      })
-    })
-    
-    // ....
-    
-    // map.addLayer({
-    //   'id': '_point',
-    //   'source': '_point',
-    //   'type': 'symbol',
-    //   'layout': {
-    //     'icon-image': 'carIcon',
-    //     'icon-size': 1.5,
-    //     'icon-rotate': ['get', 'bearing'],
-    //     'icon-rotation-alignment': 'map',
-    //     'icon-allow-overlap': true,
-    //     'icon-ignore-placement': true
-    //   }
-    // })
-    
-    
-    // map.addLayer({
-    //   'id': id,
-    //   'type': 'line',
-    //   'source': {
-    //     'type': 'geojson',
-    //     'data': {
-    //       'type': 'FeatureCollection',
-    //       'features': featureCollection
-    //     }
-    //   },
-    //   'paint': {
-    //     'line-width': 3,
-    //     // Use a get expression (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-get)
-    //     // to set the line-color to a feature property value.
-    //     'line-color': ['get', 'color'] //color
-    //   }
-    // })
-    
-    
-    // map.addLayer({
-    //   'id': 'userPoly',
-    //   'type': 'fill',
-    //   'source': 'userPoly',
-    //   'layout': {},
-    //   'paint': {
-    //     'fill-color': '#409EFF',
-    //     'fill-opacity': 0.15
-    //   }
-    // })
-    
-    //а еще есть map.getLayer({})
-    
-    
-    //......................................................
-    
-    // let polygonsToAdd = {
-    //   "type": "FeatureCollection",
-    //   "features": [
-    //     Object.values(polygons)
-    //   ]
-    // }
-    // map.MapboxDraw.add(polygonsToAdd)
-    
-    
-    //......................................................
-    //Добавление полигона при загрузке
-    //РАБОТАЕТ!
-    map.addSource('selectedGPoly', {
-      'type': 'geojson',
-      'data': polygon
-    })
-    
-    map.addLayer({     //что-то стиль - не принимается.... Надо Ут.
-      'id': 'selectedGPoly',
-      'type': 'fill',
-      'source': 'selectedGPoly',
-      'layout': {},
-      'paint': {
-        'fill-color': '#409EFF',
-        'fill-opacity': 0.8
-      }
-    })
-    
-    console.log('HHHHH --')   //  что-то не работает....
-    this.flyToPoly(Object.values(polygon).flatMap(f => f.geometry.coordinates[0]))
-    console.log('fly =====', Object.values(polygons).flatMap(f => f.geometry.coordinates[0]))
-    
-    
-    //......................................................
-    //......................................................
-    
-    // попапы ( пояснялка ).
-    let popup = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: true  // закрыать при клике аутсайд
-    })
-    .setLngLat([37.618425, 55.751247])
-    .setHTML(`
-                <div>
-                  <div>GO!</div>
-                  <button data-action-name="add">add</button>
-                  <button data-action-name="delete">delete</button>
-                </div>
-              `)
-    .addTo(map)
-    
-    
-    //......................................................
-    //обработчик события в попапе
-    let popUpNode = popup.getElement()
-    this.setNewPassPopUpEventHandler(popUpNode) //функция описана ниже, в methods().
-    
-    
-    //......................................................
-    //ПОЛЕЗНЫЕ ФУНКЦИИ
-    MapboxDraw.deleteAll()
-    map.resize()
     
     
   },
   methods: {
-    setNewPassPopUpEventHandler(node) {
-      node.onmouseover = () => {
-        console.log('onmouseover ====')
-      }
-      
-      node.onclick = (e) => {
-        const actionName = e.target.dataset.actionName     //it is from <button data-action-name="delete">
-        if (actionName)
-          console.log('actionName ====', actionName)
-        
-        actionName && console.log('actionName ====', actionName) //the same
-      }
+// Универсальные метод для добалевния source для карты
+    addSourceOnMap: function(sourceName, featureArray) {
+      map.addSource(sourceName, {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: featureArray
+        },
+        cluster: true,
+        clusterMaxZoom: 20,
+        clusterRadius: 50
+      });
     },
     flyToPoly(coordinates) {
       return new Promise((resolve, reject) => {
         if (coordinates.length) {
-          let bounds = coordinates.reduce(
-            function (bounds, coord) {
+          let bounds = coordinates.reduce((bounds, coord) => {
               return bounds.extend(coord)
             },
-            new mapboxgl.LngLatBounds(coordinates[0],
-              coordinates[0]
-            ))
+            new mapboxgl.LngLatBounds(coordinates[0], coordinates[0])
+          )
           
           map.fitBounds(bounds, {
             padding: 80
