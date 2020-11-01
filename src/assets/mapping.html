@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Map</title>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+</head>
+<body>
+<div id='map' style='width: 400px; height: 300px;'>
+</div>
+
+<script>
+  const points = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "gg",
+          "marker-color": "#f22121",
+          "marker-size": "medium",
+          "icon": "star",
+          "title": "Привет!"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [37.618423, 55.751244]
+        }
+      },
+    ]
+  }
+
+  mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g' //get it et https://account.mapbox.com/
+
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [37.618423, 55.751244],
+    zoom: 11
+  })
+
+  map.on('style.load', () => {
+    map.addLayer({
+      "id": "points",
+      "type": "symbol",
+      "source": {
+        "type": "geojson",
+        "data": points
+      },
+      "layout": {
+        "icon-image": "star",   //{icon}-15
+        // "text-field": "{title}",
+        // "text-font": ["Arial"],
+        // "text-offset": [0, 0.7],
+        // "text-anchor": "top"
+      }
+    })
+  
+  })
+  
+</script>
+
+</body>
+</html>

@@ -1,3 +1,4 @@
+
 //Добавление Маркера и его ОБРАБОТЧИКА(?) - вроде как еще раз. ))
 function createMap() {        //1938
   let map = new mapboxgl.Map()

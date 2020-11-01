@@ -12,8 +12,7 @@ export const points = {
       },
       "geometry": {
         "type": "Point",
-        "coordinates":
-          [37.65, 55.75]
+        "coordinates": [37.618423, 55.751244]
       }
     },
   ]
@@ -33,7 +32,7 @@ export const polygon = {
           ]
         ]
       }
-    }
+    },
   ]
 }
 

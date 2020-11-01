@@ -3,8 +3,7 @@
 
 import {line, points, polygon} from "@/assets/geoJSON"
 
-
-//Добавление полигона из bd при загрузки карты.
+//Добавление ПОЛИГОНА из bd при загрузке карты.
 map.on('load', () => {  //exactly needed
   map.addSource('myPolygon', {    //for v-1
     'type': 'geojson',
@@ -34,6 +33,7 @@ this.flyToPoly(Object.values(polygon).flatMap(f => f.geometry.coordinates[0]))
 
 
 
+// .....................................................
 // .....................................................
 map.on('load', function () {
   map.addLayer({

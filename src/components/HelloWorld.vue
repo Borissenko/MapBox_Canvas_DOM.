@@ -22,49 +22,37 @@ export default {
       center: [37.618423, 55.751244],
       zoom: 12
     })
-  
     let feature = points.features[0]
-    console.log('feature.properties.id ====', feature.properties.id)
 
-//создаем внешний вид маркера, с помощью HTML и CSS.
-    let el = document.createElement('div')
-    el.className = 'my_marker'
-    // el.setAttribute('id', 'gg')  //add id=""
-    el.setAttribute('tabindex', '-1')  //add attribute "tabindex='-1".
-    el.innerHTML = `<div id="${feature.properties.id}">GO</div>`
-
-//на html вешаем обработчик.
-//camElement.getElementsByClassName('gg')[0]   //срабатывает.
-//camElement.getElementById('gg')              //НЕ срабатывает почему-то.
-    el.querySelector("#gg").onclick = (e) => {
-      console.log('gg')   // сразу можем что-то сделать, т.к. уже прицелены.
-      const actionName = e.target.dataset.actionName  //дополнительно отбираем по [data-action-name="55"].
-      if (feature.properties.id) {                    //дополнительно отбираем по feature.properties.id.
-        console.log('doIt()')
-      }
-    }
-
-//инициируем маркер
-    const my_marker_1 = new mapboxgl.Marker(el)  // если el не задавать, то по-умолчанию - каплевидный значек.
-    .setLngLat([37.65, 55.75])
-    .addTo(map)
+//Добавление полигона из bd при загрузки карты.
+    map.on('load', () => {  //exactly needed
+      map.addSource('myPolygon', {    //for v-1
+        'type': 'geojson',
+        'data': polygon
+      })
     
-    
+      map.addLayer({
+        "id": "myPolygon",
+        "type": "fill",
+        'source': 'myPolygon',   // v-1
+        // "source": {               //v-2
+        //   "type": "geojson",
+        //   "data": polygon
+        // },
+        "layout": {},
+        "paint": {
+          "fill-color": "#73e522",
+          "fill-opacity": 0.8
+        }
+      })
+    })
+  
+  
+  
+  
+  
   },
   methods: {
-// Универсальные метод для добалевния source для карты
-    addSourceOnMap: function (sourceName, featureArray) {
-      map.addSource(sourceName, {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: featureArray
-        },
-        cluster: true,
-        clusterMaxZoom: 20,
-        clusterRadius: 50
-      });
-    },
     flyToPoly(coordinates) {
       return new Promise((resolve, reject) => {
         if (coordinates.length) {
