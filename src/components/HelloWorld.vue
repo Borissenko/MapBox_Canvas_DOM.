@@ -23,49 +23,37 @@ export default {
       zoom: 12
     })
   
-  
-    map.on('style.load', () => {
-      let features = points.features
-      features.forEach(feature => {    //752
-        let camElement = this.addCameraElementToDOM(feature)  //генерация html для маркера, с присуждением ему id-атрибута.
-    
-        document.getElementById(feature.properties.id)   //вешаем на html ОБРАБОТЧИК.
-          .onclick = (e) => {
-          console.log(e.target.id)   // (!)
-          //ТАКЖЕ можно что-то делать, чисто отталкиваясь от feature.properties.id.
-        }
-        
-        let cameraMarker = new mapboxgl.Marker(camElement)    //на основе созданного html-маркера генерируем на карте МАРКЕР-ЭКЗЕМПЛЯР.
-        .setLngLat(feature.geometry.coordinates)
-        .addTo(map)
-    
-        // setTimeout(() => {
-        //     this.addClassToElement(document.getElementById(55), 'hide_selected_camera')
-        // }, 0)
-      })
-    })
-  
-  
+    let feature = points.features[0]
+    console.log('feature.properties.id ====', feature.properties.id)
+
+//создаем внешний вид маркера, с помощью HTML и CSS.
+    let el = document.createElement('div')
+    el.className = 'my_marker'
+    // el.setAttribute('id', 'gg')  //add id=""
+    el.setAttribute('tabindex', '-1')  //add attribute "tabindex='-1".
+    el.innerHTML = `<div id="${feature.properties.id}">GO</div>`
+
+//на html вешаем обработчик.
+//camElement.getElementsByClassName('gg')[0]   //срабатывает.
+//camElement.getElementById('gg')              //НЕ срабатывает почему-то.
+    el.querySelector("#gg").onclick = (e) => {
+      console.log('gg')   // сразу можем что-то сделать, т.к. уже прицелены.
+      const actionName = e.target.dataset.actionName  //дополнительно отбираем по [data-action-name="55"].
+      if (feature.properties.id) {                    //дополнительно отбираем по feature.properties.id.
+        console.log('doIt()')
+      }
+    }
+
+//инициируем маркер
+    const my_marker_1 = new mapboxgl.Marker(el)  // если el не задавать, то по-умолчанию - каплевидный значек.
+    .setLngLat([37.65, 55.75])
+    .addTo(map)
     
     
   },
   methods: {
-    addCameraElementToDOM: function (feature) {
-      let camElement = document.createElement('div')   // initialisation html-формы
-    
-      camElement.className = 'my_marker'  // add class
-      // camElement.setAttribute('id', '55')  //add id=""
-      camElement.setAttribute('tabindex', '-1')  //add attribute "tabindex".
-    
-      let htmlForMarker = ''
-      // htmlForMarker +=`<div data-title="${feature.properties.id}"></div>`   //draw children with data-title=""
-      htmlForMarker +=`<div id="${feature.properties.id}"></div>`   //draw children with data-title="",   // document.querySelector()
-      camElement.innerHTML = htmlForMarker //set htmlForMarker
-    
-      return camElement
-    },
 // Универсальные метод для добалевния source для карты
-    addSourceOnMap: function(sourceName, featureArray) {
+    addSourceOnMap: function (sourceName, featureArray) {
       map.addSource(sourceName, {
         type: 'geojson',
         data: {

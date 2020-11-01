@@ -5,7 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'                    // it is necessary exac
 export default {
   mounted() {  //exactly with mounted(!), not created.
     
-    //прикрутили токен, которыя генерируется в личном кабинете компании https://account.mapbox.com/
+    //прикрутили ТОКЕН, который генерируется в личном кабинете компании https://account.mapbox.com/
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g'
     
     //ГЕНЕРАЦИЯ ЭКЗЕМПЛЯРА карты, map_instance.
@@ -17,7 +17,7 @@ export default {
     })
     
    
-    map.on('style.load', () => {
+    map.on('style.load', () => {  //map.on('style.load' - нужен ли сдесь??
       this.drawVisibleCameras()   //описываем маркер с навешенным обработчиком и инстиллируем его в карту.
       
       map.on('click', (e) => {  //CLICK в ЛЮБОЙ ТОЧКЕ КАРТЫ. Возвращает ГЕОГРАФИЧЕСКИЕ и броузегрные координаты клика.

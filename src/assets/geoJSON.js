@@ -4,7 +4,7 @@ export const points = {
     {
       "type": "Feature",
       "properties": {
-        "id": 22,
+        "id": "gg",
         "marker-color": "#f22121",
         "marker-size": "medium",
         "icon": "star",

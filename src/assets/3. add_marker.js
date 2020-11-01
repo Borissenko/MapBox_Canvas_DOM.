@@ -1,11 +1,29 @@
 //произвольный маркер
 //аналогичен point'у, но имеет html-дизайнерский вид.
 
-import mapboxgl from "mapbox-gl";
+import mapboxgl from "mapbox-gl"
+import {points} from '@/assets/geoJSON'
+
+
+let feature = points.features[0]
 
 //создаем внешний вид маркера, с помощью HTML и CSS.
 let el = document.createElement('div')
 el.className = 'my_marker'
+el.setAttribute('id', '55')  //add id=""
+el.setAttribute('tabindex', '-1')  //add attribute "tabindex='-1".
+el.innerHTML = `<div  id="${feature.properties.id}" data-action-name="${feature.properties.title}">GO</div>`
+
+//на html вешаем обработчик.
+//camElement.getElementsByClassName('gg')[0]   //срабатывает.
+//camElement.getElementById('gg')              //НЕ срабатывает почему-то.
+el.querySelector("#gg").onclick = (e) => {
+  console.log('gg')   // сразу можем что-то сделать, т.к. уже прицелены.
+  const actionName = e.target.dataset.actionName  //дополнительно отбираем по [data-action-name="55"].
+  if (feature.properties.id) {                    //дополнительно отбираем по feature.properties.id.
+    console.log('doIt()')
+  }
+}
 
 //описываем CSS
 // <style>
@@ -23,77 +41,31 @@ const my_marker_1 = new mapboxgl.Marker(el)  // если el не задават�
 .addTo(map)
 
 
-//МЕТОДЫ у маркера, все методы - см. https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getlnglat.
-my_marker_1.setDraggable(true) //в парамерты маркера добавить поле "shouldBeDraggable: true"
+//ДОПОЛНИТЕЛЬНО:
 
+//МЕТОДЫ у маркера, все методы - см. https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getlnglat.
+// 1)
+my_marker_1.setDraggable(true) //в парамерты маркера добавить поле "shouldBeDraggable: true"
+// 2)
 setTimeout(() => {//удалить маркер
   my_marker_1.remove()
 }, 5000)
 
 
-//.....................................................
-//CLICK по маркеру. Добавление ОБРАБОТЧИКА для Маркера.
-mounted() {
-  this.createMap()
-}
-createMap: function () {
-  map.on('style.load', () => {
-    this.drawVisibleCameras()
-  })
-}
 
-//описываем маркер с навешенным обработчиком и инстиллируем его в карту.
-function drawVisibleCameras() {    //720
-  let features = this.cameraFeatures.filter()   //745
-  
-  features.forEach(feature => {    //752
-    let camElement = this.addCameraElementToDOM(feature)  //генерация html для маркера, с присуждением ему id-атрибута.
-    
-    camElement.getElementsByClassName('camera_point')[0].getElementsByClassName('camera_marker')[0]   //вешаем на html ОБРАБОТЧИК. ОН - СРАБАТЫВАЕТ(!).
-      .onclick = (e) => {
-      console.log(e.target.id)   // (!)
-      //Также можно что-то делать, чисто отталкиваясь от feature.properties.id.
-    }
-    
-    let cameraMarker = new mapboxgl.Marker(camElement)    //на основе созданного html-маркера генерируем на карте МАРКЕР-ЭКЗЕМПЛЯР.
-    .setLngLat(feature.geometry.coordinates)
-    .addTo(this.map)
-    
-    setTimeout(() => {
-      if (!this.selectedCamera || !Object.keys(this.selectedCamera).length) return;
-      if (document.getElementById(this.mapId + '_camera_' + this.selectedCamera.CAMERA))
-        this.addClassToElement(document.getElementById(this.mapId + '_camera_' + this.selectedCamera.CAMERA), 'hide_selected_camera')
-    }, 0)
-  })
-},
+//можем добавить class на какой-нибудь тег из html-болванки маркера.
+setTimeout(() => {
+  el.className = 'turn-off'
+}, 0)
 
 
-// генерируем DOM-элемент для камеры.
-addCameraElementToDOM: function (camera_feature) {
-  let camElement = document.createElement('div')   // initialisation html-формы
-  
-  camElement.className = elClass  // add class
-  camElement.setAttribute('id', '55')  //add id=""
-  camElement.setAttribute('tabindex', '-1')  //add attribute "tabindex".
-  
-  let htmlForMarker = '';
-  htmlForMarker +=`<div data-title="${camera_feature.properties.name}"></div>`   //draw children with data-title=""
-  camElement.innerHTML = htmlForMarker //set htmlForMarker
-  
-  return camElement
-},
+//ЧТО МОЖНО ЗАПРОСИТЬ у el.
+let class_ = el.className    //запрашиваем, "vesna red". Дополнительно с помощью el.className можно и присуждать.
+let classes = el.classList   //он круче, чем el.className. ['vesna', 'red'].
 
-// добавляем элементу класс, но перед добавлением проверяет, не указан ли он уже.
-addClassToElement: function (el, className) {
-  let classes = el.classList;
-  let has = false;
-  for (let i = 0; i < classes.length; i++) {
-    if (classes[i] == className) {
-      has = true;
-      break;
-    }
-  }
-  if (!has) el.className += ' ' + className;
-},
+
+
+
+
 
 
