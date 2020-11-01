@@ -22,14 +22,48 @@ export default {
       center: [37.618423, 55.751244],
       zoom: 12
     })
+  
+  
+    map.on('style.load', () => {
+      let features = points.features
+      features.forEach(feature => {    //752
+        let camElement = this.addCameraElementToDOM(feature)  //генерация html для маркера, с присуждением ему id-атрибута.
     
+        document.getElementById(feature.properties.id)   //вешаем на html ОБРАБОТЧИК.
+          .onclick = (e) => {
+          console.log(e.target.id)   // (!)
+          //ТАКЖЕ можно что-то делать, чисто отталкиваясь от feature.properties.id.
+        }
+        
+        let cameraMarker = new mapboxgl.Marker(camElement)    //на основе созданного html-маркера генерируем на карте МАРКЕР-ЭКЗЕМПЛЯР.
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map)
     
-    
-    
+        // setTimeout(() => {
+        //     this.addClassToElement(document.getElementById(55), 'hide_selected_camera')
+        // }, 0)
+      })
+    })
+  
+  
     
     
   },
   methods: {
+    addCameraElementToDOM: function (feature) {
+      let camElement = document.createElement('div')   // initialisation html-формы
+    
+      camElement.className = 'my_marker'  // add class
+      // camElement.setAttribute('id', '55')  //add id=""
+      camElement.setAttribute('tabindex', '-1')  //add attribute "tabindex".
+    
+      let htmlForMarker = ''
+      // htmlForMarker +=`<div data-title="${feature.properties.id}"></div>`   //draw children with data-title=""
+      htmlForMarker +=`<div id="${feature.properties.id}"></div>`   //draw children with data-title="",   // document.querySelector()
+      camElement.innerHTML = htmlForMarker //set htmlForMarker
+    
+      return camElement
+    },
 // Универсальные метод для добалевния source для карты
     addSourceOnMap: function(sourceName, featureArray) {
       map.addSource(sourceName, {

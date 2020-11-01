@@ -15,7 +15,7 @@ export const points = {
         "coordinates":
           [37.65, 55.75]
       }
-    }
+    },
   ]
 }
 

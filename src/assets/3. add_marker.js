@@ -23,16 +23,12 @@ const my_marker_1 = new mapboxgl.Marker(el)  // если el не задават�
 .addTo(map)
 
 
-//МЕТОДЫ у маркера
+//МЕТОДЫ у маркера, все методы - см. https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getlnglat.
 my_marker_1.setDraggable(true) //в парамерты маркера добавить поле "shouldBeDraggable: true"
 
 setTimeout(() => {//удалить маркер
   my_marker_1.remove()
 }, 5000)
-
-//все методы у my_marker_1 - см. https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getlnglat
-
-
 
 
 //.....................................................
@@ -41,11 +37,12 @@ mounted() {
   this.createMap()
 }
 createMap: function () {
-  this.map.on('style.load', () => {
+  map.on('style.load', () => {
     this.drawVisibleCameras()
-  }
+  })
 }
 
+//описываем маркер с навешенным обработчиком и инстиллируем его в карту.
 function drawVisibleCameras() {    //720
   let features = this.cameraFeatures.filter()   //745
   
