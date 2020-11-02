@@ -14,7 +14,7 @@ export const points = {
         "type": "Point",
         "coordinates": [37.618423, 55.751244]
       }
-    },
+    }
   ]
 }
 
@@ -23,7 +23,13 @@ export const polygons = {   //polygon may be several(!)
   "features": [
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "name": "Привет, Kola!",     //это выведем в всплывающем попапе.
+        "description": `
+<strong>Make it Mount Pleasant</strong>
+<a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Go ahead!</a>
+        `
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -35,7 +41,10 @@ export const polygons = {   //polygon may be several(!)
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "name": "Привет, Ola!",
+        "description": `<div>Привет!</div>`
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
@@ -54,9 +63,11 @@ export const lines = {
   "features": [
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "color": "#d91c1c"
+      },
       "geometry": {
-        "type": "LineString",   //"Polygon" for zone.
+        "type": "LineString",
         "coordinates": [    //only for one item(!)
           [37.61, 55.75], [37.7, 55.79], [37.618423, 55.9]
         ]
@@ -64,10 +75,12 @@ export const lines = {
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "color": "#1980ee"
+      },
       "geometry": {
-        "type": "LineString",   //"Polygon" for zone.
-        "coordinates": [    //only for one item(!)
+        "type": "LineString",
+        "coordinates": [
           [37.61, 55.7], [37.7, 55.73], [37.618423, 55.9]
         ]
       }
@@ -79,8 +92,8 @@ export const line = {   //ТОЖЕ будет работать(!)
   "type": "Feature",
   "properties": {},
   "geometry": {
-    "type": "LineString",   //"Polygon" for zone.
-    "coordinates": [    //only for one item(!)
+    "type": "LineString",
+    "coordinates": [
       [37.61, 55.75], [37.7, 55.79], [37.618423, 55.9]
     ]
   }
