@@ -11,7 +11,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'                    // it is necessary exac
 import MapboxDraw from "@mapbox/mapbox-gl-draw"
 import mapboxPolyline from '@mapbox/polyline'
 
-import {points, line, polygon} from '@/assets/geoJSON'
+import {points, lines, polygons} from '@/assets/geoJSON'
 
 export default {
   mounted() {
@@ -23,15 +23,17 @@ export default {
       zoom: 12
     })
     let feature = points.features[0]
-    
+  
+    //point like img.
+    // https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/
 
 //Добавление полигона из bd при загрузки карты.
     map.on('load', () => {  //exactly needed
+      
       map.addSource('myPolygon', {    //for v-1
         'type': 'geojson',
-        'data': polygon
+        'data': polygons
       })
-    
       map.addLayer({
         "id": "myPolygon",
         "type": "fill",
@@ -46,11 +48,23 @@ export default {
           "fill-opacity": 0.8
         }
       })
+  
+      map.addLayer({
+        'id': 'line',
+        'type': 'line', //'circle',
+        "source": {
+          "type": "geojson",
+          "data": lines
+        },
+        'layout': {
+          "line-join": "round",
+        },
+        "paint": {
+          "line-color": "#888",
+          "line-width": 2
+        }
+      })
     })
-  
-  
-  
-  
   
   },
   methods: {

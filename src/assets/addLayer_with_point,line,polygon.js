@@ -24,6 +24,22 @@ map.on('load', () => {  //exactly needed
       "fill-opacity": 0.8
     }
   })
+  
+  map.addLayer({   //only for one item(??!)
+    'id': 'line',
+    'type': 'line', //'circle',
+    "source": {
+      "type": "geojson",
+      "data": line
+    },
+    'layout': {
+      "line-join": "round",
+    },
+    "paint": {
+      "line-color": "#888",
+      "line-width": 8
+    }
+  })
 })
 
 
