@@ -23,7 +23,13 @@ map.addControl(geolocateControl_1, "top-left")
 
 
 
-// Включение навигации по карте при помощи клавиатуры
+// Включение навигации по карте при помощи КЛАВИАТУРЫ.
 map.keyboard.enable()
 
 
+//ПЕРЕЛЕТ
+// https://docs.mapbox.com/mapbox-gl-js/example/flyto/
+map.flyTo({
+  center: [37.618423, 55.751244],
+  essential: true // this animation is considered essential with respect to prefers-reduced-motion
+})

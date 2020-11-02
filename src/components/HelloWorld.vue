@@ -23,6 +23,7 @@ export default {
       zoom: 12
     })
     let feature = points.features[0]
+    
 
 //Добавление полигона из bd при загрузки карты.
     map.on('load', () => {  //exactly needed
