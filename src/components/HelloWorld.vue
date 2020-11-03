@@ -23,6 +23,11 @@ export default {
       zoom: 12
     })
   
+    var sw = new mapboxgl.LngLat(-73.9876, 40.7661);
+    var ne = new mapboxgl.LngLat(-73.9397, 40.8002);
+    var llb = new mapboxgl.LngLatBounds(sw, ne);
+    console.log('llb ===', llb)
+  
     map.on('load', function () {
       map.addSource('places', {
         'type': 'geojson',
