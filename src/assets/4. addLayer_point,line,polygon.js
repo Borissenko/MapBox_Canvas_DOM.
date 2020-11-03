@@ -4,9 +4,9 @@
 
 import {line, lines, points, polygons} from "@/assets/geoJSON"
 
-map.on('load', () => {  //exactly needed
+map.on('load', () => {  //exactly needed (!!!!)
   
-  //ПОЛИГОН
+  // == ПОЛИГОН
   map.addSource('myPolygon', {    //for v-1
     'type': 'geojson',
     'data': polygons
@@ -35,7 +35,8 @@ map.on('load', () => {  //exactly needed
     }
   })
   
-  //ЛИНИЯ
+  
+  // == ЛИНИЯ
   map.addSource('lines', {
     'type': 'geojson',
     'data': lines    //с line ТОЖЕ будет работать(!)
@@ -55,45 +56,34 @@ map.on('load', () => {  //exactly needed
       "line-width": 8
     }
   })
-})
-
-//ТОЧКА почему-то не получается...  ))
-// .....................................................
-// .....................................................
-
-//один из примеров из туториала - point like img: https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/
-
-map.on('load', function () {
+  
+  
+  // == ИКОНКА
+  map.addSource('places', {
+    'type': 'geojson',
+    'data': points
+  })
+  
   map.addLayer({
-    "id": "points",
-    "type": "symbol",
-    "source": {
-      "type": "geojson",
-      "data": points
-    },
-    "layout": {
-      "icon-image": "star",   //"{icon}-15"   && properties.icon = "star"
-      // "text-field": "{title}",
-      "text-font": ["Arial"],
+    'id': 'places',
+    'type': 'symbol',
+    'source': 'places',
+    'layout': {
+      'icon-image': '{icon}-15',    //"'icon-image': 'music'" - NO WORKING(!). We need "'music-15".
+      'icon-allow-overlap': true,    //разрешить перекрывать значек
+      'icon-size': 1.5,
+      'icon-rotate': ['get', 'bearing'],   //для каждого отдельного point значение 'icon-rotate' будет браться из properties.bearing
+      'icon-rotation-alignment': 'map',
+      'icon-ignore-placement': true,
+      
+      "text-field": "{title}",   // ПОДПИСЬ под иконкой, для каждого отдельного point значение "text-field" будет браться из properties.title
+      //"text-font": ["Arial"],
       "text-offset": [0, 0.7],
-      "text-anchor": "top"
+      "text-anchor": "top" // где показывать попап
     }
   })
   
-})
-
-map.addLayer({
-  'id': '_point',
-  'source': '_point',
-  'type': 'symbol',
-  'layout': {
-    'icon-image': 'carIcon',
-    'icon-size': 1.5,
-    'icon-rotate': ['get', 'bearing'],
-    'icon-rotation-alignment': 'map',
-    'icon-allow-overlap': true,
-    'icon-ignore-placement': true
-  }
+  
 })
 
 

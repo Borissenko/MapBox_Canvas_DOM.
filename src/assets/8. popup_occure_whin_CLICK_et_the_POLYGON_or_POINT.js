@@ -1,7 +1,8 @@
 //Появление попапа при клике по полигону
+//https://docs.mapbox.com/mapbox-gl-js/example/polygon-popup-on-click/
 
 import mapboxgl from "mapbox-gl";
-import {polygons} from "@/assets/geoJSON";
+import {points, lines, line, polygons} from '@/assets/geoJSON'
 
 export default {
   mounted() {
@@ -34,9 +35,13 @@ export default {
       // When a click event occurs on a feature in the states layer, open a popup at the
       // location of the click, with description HTML from its properties.
       map.on('click', 'myPolygonId', function (e) {    //myPolygonId - это 'id' et map.addLayer(), при добавлении ПОЛИГОНА или ТОЧКИ.
-        let targetStaff = e.features[0]   //доступ ко всем показалелям из geoGSON'a.
         
-        //получение координат кликнутого полигона и коррекция их.
+        // targetSTAFF
+        e.features[0]   //доступ ко всем показалелям из geoGSON'a.
+        e.features[0].properties
+        e.lngLat.lng
+        
+        //получение координат кликнутого полигона/иконки и коррекция координат.
         let coordinates = e.features[0].geometry.coordinates.slice()  //применимо более для точки.
 
 // Ensure that if the map is zoomed out such that multiple

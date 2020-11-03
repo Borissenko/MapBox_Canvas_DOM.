@@ -4,17 +4,33 @@ export const points = {
     {
       "type": "Feature",
       "properties": {
-        "id": "gg",
-        "marker-color": "#f22121",
-        "marker-size": "medium",
-        "icon": "star",
-        "title": "Привет!"
-      },
+        "id": "1",
+        "icon": 'music',  //'bicycle', 'music', 'bar', 'art-gallery', 'rocket'  //"star"- NO working,
+        "marker-color": "#f22121",   //NO working,
+        "marker-size": "medium",     //переопраделяется в map.addLayer({}).
+        "title": "Привет, Ola!",     //подпись под иконкой
+        'description': '<strong>Make it </strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        },
       "geometry": {
         "type": "Point",
         "coordinates": [37.618423, 55.751244]
       }
-    }
+    },
+    {
+      'type': 'Feature',
+      'properties': {
+        "id": "2",
+        'icon': 'theatre',
+        "marker-color": "#f22121",
+        "marker-size": "medium",
+        "title": "Привет, Kola!",
+        'description': '<strong>Make it </strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        },
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [37.63, 55.76]
+      }
+    },
   ]
 }
 
