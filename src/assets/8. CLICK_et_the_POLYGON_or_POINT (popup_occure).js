@@ -34,11 +34,14 @@ export default {
       
       // When a click event occurs on a feature in the states layer, open a popup at the
       // location of the click, with description HTML from its properties.
-      map.on('click', 'myPolygonId', function (e) {    //myPolygonId - это 'id' et map.addLayer(), при добавлении ПОЛИГОНА или ТОЧКИ.
+      map.on('click', 'myPolygonId', function (e) {    //myPolygonId - это 'id' et map.addLayer(), при добавлении ПОЛИГОНОВ или ТОЧЕК.
         
         // targetSTAFF
-        e.features[0]   //доступ ко всем показалелям из geoGSON'a.
+        e.features[0]   //доступ ко всем показалелям geoGSON'a КЛИКНУТОГО полигона. НЕПЕРЕЧИСЛЯЕМОЕ свойство(!).
         e.features[0].properties
+        e.features[0].layer
+        e.features[0]._geometry.coordinates
+        e.features[0].source   // 'myPolygonId'
         e.lngLat.lng
         
         //получение координат кликнутого полигона/иконки и коррекция координат.

@@ -9,7 +9,7 @@ export const points = {
         "marker-color": "#f22121",   //NO working,
         "marker-size": "medium",     //переопраделяется в map.addLayer({}).
         "title": "Привет, Ola!",     //подпись под иконкой
-        'description': '<strong>Make it </strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        'description': '<strong>music</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
         },
       "geometry": {
         "type": "Point",
@@ -17,14 +17,59 @@ export const points = {
       }
     },
     {
+      "type": "Feature",
+      "properties": {
+        "id": "1",
+        "icon": 'bicycle',
+        "marker-color": "#f22121",
+        "marker-size": "medium",
+        "title": "Привет!",
+        'description': '<strong>bicycle</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [37.59, 55.751244]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "1",
+        "icon": 'bar',
+        "marker-color": "#f22121",
+        "marker-size": "medium",
+        "title": "Привет, Ola!",
+        'description': '<strong>bar</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [37.618423, 55.74]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "1",
+        "icon": 'rocket',
+        "marker-color": "#f22121",
+        "marker-size": "medium",
+        "title": "Hi!",
+        'description': '<strong>rocket</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [37.66, 55.75]
+      }
+    },
+    {
       'type': 'Feature',
       'properties': {
         "id": "2",
         'icon': 'theatre',
-        "marker-color": "#f22121",
+        "marker-color": "#ecd53e",
         "marker-size": "medium",
         "title": "Привет, Kola!",
-        'description': '<strong>Make it </strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        'description': '<strong>theatre</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
         },
       'geometry': {
         'type': 'Point',
@@ -34,7 +79,7 @@ export const points = {
   ]
 }
 
-export const polygons = {   //polygon may be several(!)
+export const polygons = {   //polygon may be several(!), а отдельный полигон может состоять из нескольких изолированных многоугольников.
   "type": "FeatureCollection",
   "features": [
     {
@@ -48,10 +93,10 @@ export const polygons = {   //polygon may be several(!)
       },
       "geometry": {
         "type": "Polygon",
-        "coordinates": [
+        "coordinates": [   //полигон может состоять из нескольких изолированных многоугольников.
           [
             [37.65, 55.75], [37.66, 55.75], [37.65, 55.77], [37.65, 55.75]
-          ]
+          ],
         ]
       }
     },
@@ -112,5 +157,15 @@ export const line = {   //ТОЖЕ будет работать(!)
     "coordinates": [
       [37.61, 55.75], [37.7, 55.79], [37.618423, 55.9]
     ]
+  }
+}
+
+
+let ff = {
+  crs: {
+    type: "name",
+    properties: {
+      name: "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
   }
 }

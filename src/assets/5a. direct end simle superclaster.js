@@ -1,32 +1,19 @@
-<template>
-  <div>
-    <div id="map"></div>
-  </div>
-</template>
+//resource - https://docs.mapbox.com/mapbox-gl-js/example/cluster/
 
-<script>
-import mapboxgl from 'mapbox-gl'
-import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'  //it is no work !
-import 'mapbox-gl/dist/mapbox-gl.css'                    // it is necessary exactly!
-import MapboxDraw from "@mapbox/mapbox-gl-draw"
-import mapboxPolyline from '@mapbox/polyline'
-import Supercluster from 'supercluster';
+//look to https://docs.mapbox.com/mapbox-gl-js/example/cluster-html/ too exactly!
 
 import {points, lines, line, polygons} from '@/assets/geoJSON'
 
 export default {
   mounted() {
-  
-    // mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZnNic20wMzlrMnFxa3didHFyYzFzIn0.RdgEdp7LaXIslsPrEGpwmA';
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g';  //my
-  
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v8',
       center: [37.618423, 55.751244],
       zoom: 9
     });
-  
+    
     map.on('load', function () {
       // Add a new source from our GeoJSON data and
       // set the 'cluster' option to true. GL-JS will
@@ -40,7 +27,7 @@ export default {
         clusterMaxZoom: 14, // Max zoom to cluster points on
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50), in pixels.
       });
-    
+      
       map.addLayer({
         id: 'clusters',
         type: 'circle',
@@ -66,7 +53,7 @@ export default {
           ]
         }
       });
-    
+      
       map.addLayer({
         id: 'cluster-count',
         type: 'symbol',
@@ -78,7 +65,7 @@ export default {
           'text-size': 12
         }
       });
-    
+      
       map.addLayer({
         id: 'unclustered-point',   //отдельные, несобранные в кластер точки.
         type: 'circle',
@@ -91,7 +78,7 @@ export default {
           'circle-stroke-color': '#211f1f'
         }
       });
-    
+      
       // inspect a cluster on click
       map.on('click', 'clusters', function (e) {
         var features = map.queryRenderedFeatures(e.point, {
@@ -102,7 +89,7 @@ export default {
           clusterId,
           function (err, zoom) {
             if (err) return;
-          
+            
             map.easeTo({
               center: features[0].geometry.coordinates,
               zoom: zoom
@@ -110,7 +97,7 @@ export default {
           }
         );
       });
-    
+      
       // When a click event occurs on a feature in
       // the unclustered-point layer, open a popup at
       // the location of the feature, with
@@ -125,13 +112,13 @@ export default {
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
-      
+        
         new mapboxgl.Popup()
         .setLngLat(coordinates)           // coordinates - from вышезаявленная переменная
         .setHTML(title + '<br>Привет!')   // title - from вышезаявленная переменная
         .addTo(map);
       });
-    
+      
       map.on('mouseenter', 'clusters', function () {
         map.getCanvas().style.cursor = 'pointer';
       });
@@ -139,36 +126,15 @@ export default {
         map.getCanvas().style.cursor = '';
       });
     })
-  
-},
-  methods: {
-  
+    
   }
 }
-</script>
 
-<style>
-.my_marker {
-  width: 10px;
-  height: 20px;
-  background: red;
-}
 
-.none {
-  margin: 0;
-  padding: 0;
-}
 
-body {
-  margin: 0;
-  padding: 0;
-}
 
-#map {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  height: 90vh;
-  width: 95%;
-}
-</style>
+
+
+
+
+
