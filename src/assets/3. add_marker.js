@@ -35,31 +35,32 @@ el.querySelector("#gg").onclick = (e) => {
 // </style>
 
 
-//инициируем маркер
+//ИНИЦИИРУЕМ маркер
 const my_marker_1 = new mapboxgl.Marker(el)  // если el не задавать, то по-умолчанию - каплевидный значек.
 .setLngLat([37.65, 55.75])
 .addTo(map)
 
 
-//ДОПОЛНИТЕЛЬНО:
+//МЕТОДЫ у маркера
+//все методы - см. https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getlnglat.
 
-//МЕТОДЫ у маркера, все методы - см. https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getlnglat.
-// 1)
-my_marker_1.setDraggable(true) //в парамерты маркера добавить поле "shouldBeDraggable: true"
-// 2)
-setTimeout(() => {//удалить маркер
+//в парамерты маркера добавить поле "shouldBeDraggable: true"
+my_marker_1.setDraggable(true)
+
+// УДАЛЕНИЕ маркера
+setTimeout(() => {
   my_marker_1.remove()
 }, 5000)
 
 
 
-//можем добавить class на какой-нибудь тег из html-болванки маркера.
+//ДОБАВИТЬ class в html-болванке маркера.
 setTimeout(() => {
   el.className = 'turn-off'
 }, 0)
 
 
-//ЧТО МОЖНО ЗАПРОСИТЬ у el.
+//ЗАПРОСИТЬ у el:
 let class_ = el.className    //запрашиваем, "vesna red". Дополнительно с помощью el.className можно и присуждать.
 let classes = el.classList   //он круче, чем el.className. ['vesna', 'red'].
 

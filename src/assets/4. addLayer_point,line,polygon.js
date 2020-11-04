@@ -2,11 +2,14 @@
 // Добавление из bd при загрузке карты.
 //generator et a geoJSON - http://geojson.io/#map=10/55.7553/37.7600
 
+//пример добавления точки - https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/
+
 import {line, lines, points, polygons} from "@/assets/geoJSON"
 
 map.on('load', () => {  //exactly needed (!!!!)
   
   // == ПОЛИГОН
+  //https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
   map.addSource('myPolygon', {    //for v-1
     'type': 'geojson',
     'data': polygons
@@ -37,6 +40,7 @@ map.on('load', () => {  //exactly needed (!!!!)
   
   
   // == ЛИНИЯ
+  //см. https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/
   map.addSource('lines', {
     'type': 'geojson',
     'data': lines    //с line ТОЖЕ будет работать(!)
@@ -47,8 +51,8 @@ map.on('load', () => {  //exactly needed (!!!!)
     "type": "line",
     "source": "lines",
     "layout": {
-      "line-join": "round",
-      "line-cap": "round"
+      "line-join": "round",   //закругление линии в месте стыковки отрезков, для плавности.
+      "line-cap": "round"     //закругление линии на ее окончаниях.
     },
     "paint": {
       //"line-color": "#888",
@@ -59,6 +63,7 @@ map.on('load', () => {  //exactly needed (!!!!)
   
   
   // == ИКОНКА
+  //для использования СВОЕЙ img.png - см. пример https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/.
   map.addSource('places', {
     'type': 'geojson',
     'data': points
@@ -77,7 +82,7 @@ map.on('load', () => {  //exactly needed (!!!!)
       'icon-ignore-placement': true,
       
       "text-field": "{title}",   // ПОДПИСЬ под иконкой, для каждого отдельного point значение "text-field" будет браться из properties.title
-      //"text-font": ["Arial"],
+      "text-font": ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
       "text-offset": [0, 0.7],
       "text-anchor": "top" // где показывать попап
     }
@@ -87,6 +92,27 @@ map.on('load', () => {  //exactly needed (!!!!)
 })
 
 
-//а еще есть
-map.getLayer({})
+// ОБНОВЛЕНИЕ ресурсов при их изменении
+map.getSource(sourceName).setData({
+  'type': 'FeatureCollection',
+  'features': features
+})
 
+
+//УДАЛЕНИЕ полигона и его ресурса
+function removeSelectedPolygons(sourceName) {
+  if (map.getLayer(sourceName))
+    map.removeLayer(sourceName)
+  if (map.getSource(sourceName))
+    map.removeSource(sourceName)
+}
+
+
+
+
+//включение-ВЫКЛЮЧЕНИЕ слоя кнопкой
+//https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/
+
+
+//ДОПОЛНИТЕЛЬНО
+map.getLayer({})  //проверка наличия слоя
