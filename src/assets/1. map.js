@@ -41,23 +41,23 @@ export default {
   },
   methods: {
     getCoordinatesEtShowingMapScreen(map) { //координаты карты в области видимости экрана
-      let coords2 = []
-      let canvas = map.getCanvas()
-      let w = canvas.width
-      let h = canvas.height
-      coords2[0] = map.unproject([-50,-50]).toArray()   //50 - clusterRadius
-      coords2[1] = map.unproject([-50,h+50]).toArray()
-      coords2[2] = map.unproject([w+50,h+50]).toArray()
-      coords2[3] = map.unproject([w+50,-50]).toArray()
-      let leftBottom = [coords2[0][0], coords2[0][1]]
-      let topRight = [coords2[0][0], coords2[0][1]]
-      
+      let coords2 = [];
+      let canvas = map.getCanvas();
+      let w = canvas.width;
+      let h = canvas.height;
+      coords2[0] = map.unproject([-50, -50]).toArray();  //unproject - returns a LngLat representing geographical coordinates that correspond to the specified pixel coordinates.
+      coords2[1] = map.unproject([-50, h + 50]).toArray();
+      coords2[2] = map.unproject([w + 50, h + 50]).toArray();
+      coords2[3] = map.unproject([w + 50, -50]).toArray();
+      let leftBottom = [coords2[0][0], coords2[0][1]];
+      let topRight = [coords2[0][0], coords2[0][1]];
       coords2.forEach(item => {
-        if (leftBottom[0] > item[0]) leftBottom[0] = item[0]
-        if (leftBottom[1] > item[1]) leftBottom[1] = item[1]
-        if (topRight[0] < item[0]) topRight[0] = item[0]
-        if (topRight[1] < item[1]) topRight[1] = item[1]
+        if (leftBottom[0] > item[0]) leftBottom[0] = item[0];
+        if (leftBottom[1] > item[1]) leftBottom[1] = item[1];
+        if (topRight[0] < item[0]) topRight[0] = item[0];
+        if (topRight[1] < item[1]) topRight[1] = item[1];
       })
+  
       return [leftBottom[0], leftBottom[1], topRight[0], topRight[1]]
     }
   }

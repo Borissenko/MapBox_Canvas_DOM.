@@ -19,7 +19,7 @@ export const points = {
     {
       "type": "Feature",
       "properties": {
-        "id": "1",
+        "id": "2",
         "icon": 'bicycle',
         "marker-color": "#f22121",
         "marker-size": "medium",
@@ -34,7 +34,7 @@ export const points = {
     {
       "type": "Feature",
       "properties": {
-        "id": "1",
+        "id": "3",
         "icon": 'bar',
         "marker-color": "#f22121",
         "marker-size": "medium",
@@ -49,7 +49,7 @@ export const points = {
     {
       "type": "Feature",
       "properties": {
-        "id": "1",
+        "id": "4",
         "icon": 'rocket',
         "marker-color": "#f22121",
         "marker-size": "medium",
@@ -64,7 +64,7 @@ export const points = {
     {
       'type': 'Feature',
       'properties': {
-        "id": "2",
+        "id": "5",
         'icon': 'theatre',
         "marker-color": "#ecd53e",
         "marker-size": "medium",
