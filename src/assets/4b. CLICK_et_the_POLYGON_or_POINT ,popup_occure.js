@@ -30,7 +30,7 @@ export default {
           'fill-opacity': [       //при hover изменяется opacity
             'case',
             ['boolean', ['feature-state', 'hover'], false],  //hover здесь - это поле у FeatureState, созданное в обработчике. 'feature-state' - обозначает FeatureState.
-            1,   //при наведении
+            1,   //при наведении                             //это используется в примере "Изменение paint-настроек".
             0.5  //по-умолчанию
           ]
         }
@@ -68,6 +68,7 @@ export default {
       })
 
 //...............
+// Изменение paint-настроек (здесь - fill-opacity полигона), описанных в map.addLayer({}), при наведении мышкой.
 // When the user moves their mouse over the state-fill layer, we'll update the
 // feature state for the feature under the mouse.
 
@@ -105,12 +106,12 @@ export default {
 
       
 //...............
+      //Создание курсора POINTER при наведении на элемент слоя.
       // Change the cursor to a pointer when the mouse is over the states layer.
       map.on('mouseenter', 'myPolygonId', function () {
         map.getCanvas().style.cursor = 'pointer'
       })
 
-//...............
       // Change it back to a pointer when it leaves.
       map.on('mouseleave', 'myPolygonId', function () {
         map.getCanvas().style.cursor = ''

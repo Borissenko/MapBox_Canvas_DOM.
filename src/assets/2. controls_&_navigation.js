@@ -29,10 +29,14 @@ map.keyboard.enable()
 
 //ПЕРЕЛЕТ в точку
 // https://docs.mapbox.com/mapbox-gl-js/example/flyto/
-map.flyTo({
-  center: [37.618423, 55.751244],
-  essential: true // this animation is considered essential with respect to prefers-reduced-motion
-})
+// https://docs.mapbox.com/mapbox-gl-js/example/center-on-symbol/
+
+map.on('click', 'layerId', function (e) {
+  map.flyTo({
+    center: e.features[0].geometry.coordinates,
+    essential: true  // this animation is considered essential with respect to prefers-reduced-motion
+  });
+});
 
 
 

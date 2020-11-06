@@ -26,56 +26,41 @@ export default {
       center: [37.618423, 55.751244],
       zoom: 12
     })
-  
-    let hoveredStateId = null
     
     map.on('load', () => {
-      map.addSource('myPolygon', {
-        'type': 'geojson',
-        'data': polygons  // на том же уровне, что и properties, д.б. задано поле id (!).
-      })
-      map.addLayer({
-        "id": "myPolygonId",
-        "type": "fill",
-        "source": 'myPolygon',
-        "layout": {},
-        "paint": {
-          "fill-color": "#73e522",
-          'fill-outline-color': 'rgba(200, 100, 240, 1)',
-          'fill-opacity': [       //при hover изменяется opacity
-            'case',
-            ['boolean', ['feature-state', 'hover'], false],  //hover здесь - это поле у FeatureState, созданное в обработчике. 'feature-state' - обозначает FeatureState.
-            1,   //при наведении
-            0.5  //по-умолчанию
-          ]
-        }
-      })
   
-      map.on('mousemove', 'myPolygonId', function (e) {
-        if (e.features.length > 0) {
-          if (hoveredStateId) {
-            map.setFeatureState(
-              { source: 'myPolygon', id: hoveredStateId },
-              { hover: false }
-            );
-          }
-          hoveredStateId = e.features[0].id;
-          map.setFeatureState(
-            { source: 'myPolygon', id: hoveredStateId },
-            { hover: true }
-          )
+      map.addLayer({
+        'id': 'places',
+        'type': 'symbol',
+        // 'source': points,
+  
+        "source": {
+          "type": "geojson",
+          "data": points
+        },
+        'layout': {
+          'icon-image': '{icon}-15',    //"'icon-image': 'music'" - NO WORKING(!). We need "'music-15".
+          'icon-allow-overlap': true,    //разрешить перекрывать значек
+          'icon-size': 1.5,
+          'icon-rotate': ['get', 'bearing'],   //для каждого отдельного point значение 'icon-rotate' будет браться из properties.bearing
+          'icon-rotation-alignment': 'map',
+          'icon-ignore-placement': true,
+      
+          "text-field": "5",   // ПОДПИСЬ под иконкой, для каждого отдельного point значение "text-field" будет браться из properties.title
+          "text-font": ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          "text-offset": [0, -0.6],   //ВЫНОС текста относительно center-bottom иконки.
+          'text-size': 45,
+          // "text-color": "#f22121",
+          // "font-weight": 'boild',
+          "text-anchor": "top" // где показывать попап
+        },
+        paint: {
+          "text-color": "#48f6cd",
+          "font-weight": 'bold'
         }
       })
       
-      map.on('mouseleave', 'myPolygonId', function () {
-        if (hoveredStateId) {
-          map.setFeatureState(
-            { source: 'myPolygon', id: hoveredStateId },
-            { hover: false }
-          )
-        }
-        hoveredStateId = null;
-      })
+      console.log('layers.places.layout ==', map)
   
     })
   }
