@@ -114,5 +114,43 @@ function removeSelectedPolygons(sourceName) {
 //https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/
 
 
+
+//Находится ли ТОЧКА В ПРЕДЕЛАХ полигона.
+//Пакет Turf позволяет узнать о том, находится ли точка в пределах полигона
+//@turf/boolean-point-in-polygon
+//https://github.com/Turfjs/turf
+//https://www.npmjs.com/package/@turf/boolean-point-in-polygon
+//(источник информации - https://habr.com/ru/company/ruvds/blog/489828/)
+
+const pointInPolygon = require('@turf/boolean-point-in-polygon').default;
+
+const colorado = {
+  "type": "Polygon",
+  "coordinates": [[
+    [-109, 41],
+    [-102, 41],
+    [-102, 37],
+    [-109, 37],
+    [-109, 41]
+  ]]
+};
+
+const denver = {
+  "type": "Point",
+  "coordinates": [-104.9951943, 39.7645187]
+};
+
+const sanFrancisco = {
+  "type": "Point",
+  "coordinates": [-122.4726194, 37.7577627]
+};
+
+// true
+console.log(pointInPolygon(denver, colorado));
+
+// false
+console.log(pointInPolygon(sanFrancisco, colorado));
+
+
 //ДОПОЛНИТЕЛЬНО
 map.getLayer({})  //проверка наличия слоя

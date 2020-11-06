@@ -1,3 +1,5 @@
+//Генерация geoJSON'a - http://geojson.io/
+
 export const points = {
   "type": "FeatureCollection",
   "features": [
@@ -98,7 +100,8 @@ export const polygons = {   //polygon may be several(!), а отдельный �
             [37.65, 55.75], [37.66, 55.75], [37.65, 55.77], [37.65, 55.75]
           ],
         ]
-      }
+      },
+      id: 1
     },
     {
       "type": "Feature",
@@ -113,7 +116,8 @@ export const polygons = {   //polygon may be several(!), а отдельный �
             [37.66, 55.75], [37.66, 55.8], [37.65, 55.6], [37.66, 55.75]
           ]
         ]
-      }
+      },
+      id: 2
     },
   ]
 }

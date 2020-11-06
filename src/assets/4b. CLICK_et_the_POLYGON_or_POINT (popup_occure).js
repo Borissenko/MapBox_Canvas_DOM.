@@ -17,7 +17,7 @@ export default {
     map.on('load', () => {
       map.addSource('myPolygon', {
         'type': 'geojson',
-        'data': polygons
+        'data': polygons  // на том же уровне, что и properties, д.б. задано поле id (!!!).
       })
       map.addLayer({
         "id": "myPolygonId",
@@ -27,11 +27,17 @@ export default {
         "paint": {
           "fill-color": "#73e522",
           'fill-outline-color': 'rgba(200, 100, 240, 1)',
-          "fill-opacity": 0.8
+          'fill-opacity': [       //при hover изменяется opacity
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],  //hover здесь - это поле у FeatureState, созданное в обработчике. 'feature-state' - обозначает FeatureState.
+            1,   //при наведении
+            0.5  //по-умолчанию
+          ]
         }
       })
-      
-      
+
+
+//...............
       // When a click event occurs on a feature in the states layer, open a popup at the
       // location of the click, with description HTML from its properties.
       map.on('click', 'myPolygonId', function (e) {    //myPolygonId - это 'id' et map.addLayer(), при добавлении ПОЛИГОНОВ или ТОЧЕК.
@@ -60,21 +66,59 @@ export default {
         .setHTML(e.features[0].properties.description)   //этот текст будет прописан в попапе.
         .addTo(map);
       })
+
+//...............
+// When the user moves their mouse over the state-fill layer, we'll update the
+// feature state for the feature under the mouse.
+
+//см также Create interactive hover effects - https://docs.mapbox.com/help/tutorials/create-interactive-hover-effects-with-mapbox-gl-js/ (!)
       
+      let hoveredStateId = null
+  
+      map.on('mousemove', 'myPolygonId', function (e) {
+        if (e.features.length > 0) {
+          if (hoveredStateId) {
+            map.setFeatureState(
+              { source: 'myPolygon', id: hoveredStateId },
+              { hover: false }
+            );
+          }
+          hoveredStateId = e.features[0].id;
+          map.setFeatureState(
+            { source: 'myPolygon', id: hoveredStateId },
+            { hover: true }
+          )
+        }
+      })
+
+// When the mouse leaves the state-fill layer, update the feature state of the
+// previously hovered feature.
+      map.on('mouseleave', 'myPolygonId', function () {
+        if (hoveredStateId) {
+          map.setFeatureState(
+            { source: 'myPolygon', id: hoveredStateId },
+            { hover: false }
+          )
+        }
+        hoveredStateId = null;
+      })
+
       
+//...............
       // Change the cursor to a pointer when the mouse is over the states layer.
       map.on('mouseenter', 'myPolygonId', function () {
         map.getCanvas().style.cursor = 'pointer'
       })
-      
+
+//...............
       // Change it back to a pointer when it leaves.
       map.on('mouseleave', 'myPolygonId', function () {
         map.getCanvas().style.cursor = ''
       })
-  
+
+//...............
       //обработчик для СЕНСОРНЫХ этранов
       import hammer from 'hammerjs'
-      
       hammer(el).on('tap', () => {
         //увеличиваем zoom при касании по дисплею
         const currentZoom = this.map.getZoom()

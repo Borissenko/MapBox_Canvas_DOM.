@@ -13,7 +13,7 @@ export default {
     let map = new mapboxgl.Map({
       container: 'map',        //id того дива, в который будет загружаться карта.
       style: 'mapbox://styles/mapbox/streets-v8',  // темный стиль карты - 'mapbox://styles/mapbox/dark-v10'
-      center: [37.618423, 55.751244],   //[lng, lat]
+      center: [37.618423, 55.751244],   //[lng, lat], Долгота идёт перед широтой.
       zoom: 12.5,
       minZoom: 4,
       hash: false,
