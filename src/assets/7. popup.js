@@ -1,4 +1,5 @@
 // попапы ( всплывающая пояснялка ) при загрузке карты.
+//https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup
 
 import mapboxgl from "mapbox-gl";
 

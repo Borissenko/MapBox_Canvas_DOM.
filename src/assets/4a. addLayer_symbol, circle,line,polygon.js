@@ -49,8 +49,7 @@ export default {
           'fill-outline-color': 'rgba(200, 100, 240, 1)',  //border et a polygon
           "fill-opacity": 0.8,
           "visibility": "visible",  // "none"
-          "fill-sort-key": 5,       //Features with a higher sort key will appear above features with a lower sort key. Типо z-index?
-          "fill-translate": [0, 0],  //The geometry's offset.
+          "fill-sort-key": 5,       //Типо z-index. Features with a higher sort key will appear above features with a lower sort key.
           "fill-translate-anchor": "map"  //"viewport". Относительно чего будет работать "fill-translate".
         },
         "filter": {}  //Only features that match the filter are displayed.
@@ -106,7 +105,6 @@ export default {
           'circle-stroke-color': 'red',  //обводка
           'circle-stroke-opacity': 1,
           'circle-stroke-width': 1,   //Units in pixels
-          'visibility': "visible",     //"none"
   
   
           // "circle-radius": [    //изменение радиуса кружка в зависимости от zoom. https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/#types
@@ -116,9 +114,7 @@ export default {
           //   // zoom is 10 (or greater) -> circle radius will be 5px
           //   10, 5
           // ]
-          
-        },
-        'source-layer': 'museum-cusco'
+        }
       })
       
       
@@ -153,7 +149,7 @@ export default {
           
           "text-anchor": "top",       //какой своей точкой текст совпадает с локацией. "center", "left", "right", "top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"
           "text-offset": [0, 0.7],    //ВЫНОС текста относительно anchor.
-          'text-translate': [0,0],    //вынос anchor'a from its original placement.
+          'text-translate': [0, 0],    //вынос anchor'a from its original placement.
           'text-rotate': 0,           //Units in degrees.
           'text-transform': "none",   //"none", "uppercase", "lowercase"
           
@@ -168,10 +164,11 @@ export default {
           'visibility': "visible"   //"none"
         },
         paint: {
-          "text-color": "#23e8cf",   //цвет у "text-field".
+          "text-color": "#23e8cf",   //цвет у "text-field".  Not put it in the layout{}!
           'text-opacity': 1,
           "text-halo-color": 'red',
           'text-halo-width': 2,
+          // "font-weight"- здесь и нигде - нет!
           
         }
       })

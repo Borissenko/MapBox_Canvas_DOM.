@@ -16,7 +16,6 @@ import {points, lines, line, polygons} from '@/assets/geoJSON'
 
 export default {
   mounted() {
-  
     // mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZnNic20wMzlrMnFxa3didHFyYzFzIn0.RdgEdp7LaXIslsPrEGpwmA';
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g';  //my
   
@@ -28,39 +27,30 @@ export default {
     })
     
     map.on('load', () => {
-  
-      map.addLayer({
-        'id': 'places',
-        'type': 'symbol',
-        // 'source': points,
-  
-        "source": {
-          "type": "geojson",
-          "data": points
-        },
-        'layout': {
-          'icon-image': '{icon}-15',    //"'icon-image': 'music'" - NO WORKING(!). We need "'music-15".
-          'icon-allow-overlap': true,    //разрешить перекрывать значек
-          'icon-size': 1.5,
-          'icon-rotate': ['get', 'bearing'],   //для каждого отдельного point значение 'icon-rotate' будет браться из properties.bearing
-          'icon-rotation-alignment': 'map',
-          'icon-ignore-placement': true,
-      
-          "text-field": "5",   // ПОДПИСЬ под иконкой, для каждого отдельного point значение "text-field" будет браться из properties.title
-          "text-font": ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-          "text-offset": [0, -0.6],   //ВЫНОС текста относительно center-bottom иконки.
-          'text-size': 45,
-          // "text-color": "#f22121",
-          // "font-weight": 'boild',
-          "text-anchor": "top" // где показывать попап
-        },
-        paint: {
-          "text-color": "#48f6cd",
-          "font-weight": 'bold'
-        }
+      map.addSource('myPoints', {    //for v-1
+        'type': 'geojson',
+        'data': points
       })
       
-      console.log('layers.places.layout ==', map)
+      map.addLayer({
+        'id': '_points_77',
+        'type': 'symbol',
+        "source": "myPoints",
+        'layout': {
+          'icon-image': 'music-15',    //"'icon-image': 'music'" - NO WORKING(!). We need 'music-15'.
+          'icon-allow-overlap': true,    //разрешить перекрывать значек
+          'icon-size': 1.5,
+
+          "text-field": "5",   // ПОДПИСЬ под иконкой, для каждого отдельного point значение "text-field" будет браться из properties.title
+          "text-font": ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          "text-offset": [0, -0.5],   //ВЫНОС текста относительно center-bottom иконки.
+          'text-size': 45,
+          "text-anchor": "top", // где показывать попап
+        },
+        paint: {
+          "text-color": "#48f6cd"
+        }
+      })
   
     })
   }

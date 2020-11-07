@@ -1,5 +1,7 @@
 //произвольный маркер
 //аналогичен point'у, но имеет html-дизайнерский вид.
+//https://docs.mapbox.com/mapbox-gl-js/api/markers/   <<== см настройки(!).
+//https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
 
 import mapboxgl from "mapbox-gl"
 import {points} from '@/assets/geoJSON'
@@ -10,7 +12,8 @@ let feature = points.features[0]
 //создаем внешний вид маркера, с помощью HTML и CSS.
 let el = document.createElement('div')
 el.className = 'my_marker'
-el.setAttribute('id', '55')  //add id=""
+el.id = "marker-" + feature.properties.id      //add id=""
+el.setAttribute('id', 'gg')  //add id="" too.
 el.setAttribute('tabindex', '-1')  //add attribute "tabindex='-1".
 el.innerHTML = `<div  id="${feature.properties.id}" data-action-name="${feature.properties.title}">GO</div>`
 
@@ -25,21 +28,40 @@ el.querySelector("#gg").onclick = (e) => {
   }
 }
 
-//описываем CSS
+// описываем CSS для маркера и его попапа
 // <style>
 //   .my_marker {
 //   width: 10px;
 //   height: 20px;
 //   background: red;
 // }
+// .mapboxgl-popup {
+//   max-width: 200px;
+// }
+// .mapboxgl-popup-content {
+//   text-align: center;
+//   font-family: 'Open Sans', sans-serif;
+// }
 // </style>
+
+//Для попапа.
+//В features прописываем title и description. Они будут автоматически отображаться в попапе.
+// properties: {
+//   title: 'Mapbox',
+//   description: 'Washington, D.C.'
+// }
+//CSS для попапа см. выше.
+//обработчик для вызова попапа вешать не требуется.
+let my_popup = new mapboxgl.Popup({ offset: 25 })
 
 
 //ИНИЦИИРУЕМ маркер
-const my_marker_1 = new mapboxgl.Marker(el)  // если el не задавать, то по-умолчанию - каплевидный значек.
-.setLngLat([37.65, 55.75])
-.addTo(map)
-
+map.on('load', () => {
+  const my_marker_1 = new mapboxgl.Marker(el, {offset: [0, -23]})  // если el не задавать, то по-умолчанию - каплевидный значек.
+  .setPopup(my_popup)              // attach popup to marker
+  .setLngLat([37.65, 55.75])
+  .addTo(map)
+})
 
 //МЕТОДЫ у маркера
 //все методы - см. https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getlnglat.
