@@ -309,5 +309,25 @@ console.log(pointInPolygon(denver, colorado));
 console.log(pointInPolygon(sanFrancisco, colorado));
 
 
+
+//ОБРАБОТЧИК СОБЫТИЯ ПО КЛИКУ НА конкретный, например, полигон.
+//https://docs.mapbox.com/mapbox-gl-js/example/polygon-popup-on-click/
+map.on('click', 'myPolygonId', function (e) {    //e - дает индивидуальность ответа на клик по одному из полигонов полигон-слоя.
+  new mapboxgl.Popup()
+  .setLngLat(e.lngLat)
+  .setHTML(e.features[0].properties.name)
+  .addTo(map);
+})
+// Change the cursor to a pointer when the mouse is over the states layer.
+map.on('mouseenter', 'states-layer', function () {
+  map.getCanvas().style.cursor = 'pointer';
+})
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'states-layer', function () {
+  map.getCanvas().style.cursor = '';
+})
+
+
+
 //ДОПОЛНИТЕЛЬНО
 map.getLayer({})  //проверка наличия слоя

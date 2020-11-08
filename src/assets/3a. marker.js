@@ -2,10 +2,10 @@
 //аналогичен point'у, но имеет html-дизайнерский вид.
 //https://docs.mapbox.com/mapbox-gl-js/api/markers/   <<== см настройки(!).
 //https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
+//https://docs.mapbox.com/mapbox-gl-js/example/drag-a-marker/ - перемещаемый маркер.
 
 import mapboxgl from "mapbox-gl"
 import {points} from '@/assets/geoJSON'
-
 
 let feature = points.features[0]
 
@@ -16,17 +16,27 @@ el.id = "marker-" + feature.properties.id      //add id=""
 el.setAttribute('id', 'gg')  //add id="" too.
 el.setAttribute('tabindex', '-1')  //add attribute "tabindex='-1".
 el.innerHTML = `<div  id="${feature.properties.id}" data-action-name="${feature.properties.title}">GO</div>`
+//добавляем в корневой див - img:
+el.style.backgroundImage = 'url(https://placekitten.com/g/' + marker.properties.iconSize.join('/') + '/)'
+el.style.width = feature.properties.iconSize[0] + 'px';
+el.style.height = feature.properties.iconSize[1] + 'px'
 
-//на html вешаем обработчик.
+//на html вешаем ОБРАБОТЧИК.
 //camElement.getElementsByClassName('gg')[0]   //срабатывает.
 //camElement.getElementById('gg')              //НЕ срабатывает почему-то.
-el.querySelector("#gg").onclick = (e) => {
+el.querySelector("#gg")
+  .onclick = (e) => {
   console.log('gg')   // сразу можем что-то сделать, т.к. уже прицелены.
   const actionName = e.target.dataset.actionName  //дополнительно отбираем по [data-action-name="55"].
   if (feature.properties.id) {                    //дополнительно отбираем по feature.properties.id.
     console.log('doIt()')
   }
 }
+//или 2 вариант обработчика
+el.addEventListener('click', function () {
+  window.alert(feature.properties.message);
+});
+
 
 // описываем CSS для маркера и его попапа
 // <style>
@@ -51,8 +61,14 @@ el.querySelector("#gg").onclick = (e) => {
 //   description: 'Washington, D.C.'
 // }
 //CSS для попапа см. выше.
-//обработчик для вызова попапа вешать не требуется.
-let my_popup = new mapboxgl.Popup({ offset: 25 })
+
+
+//ПОПАП, интегрированный в маркер.
+// Оработчик для вызова попапа вешать не требуется - т.к. попап пришиваем непосредственно к маркеру,
+// и ".setLngLat([37.618425, 55.751247])" - тоже не требуется.
+let my_popup = new mapboxgl.Popup({offset: 25})
+.setHTML('<h3>' + feature.properties.title + '</h3>')
+// attach popup to marker - см. ниже.
 
 
 //ИНИЦИИРУЕМ маркер
@@ -63,11 +79,32 @@ map.on('load', () => {
   .addTo(map)
 })
 
+
+//ПЕРЕТАСКИВАЕМЫЙ маркер.
+//https://docs.mapbox.com/mapbox-gl-js/example/drag-a-marker/
+map.on('load', () => {
+  let my_marker_1 = new mapboxgl.Marker({draggable: true})
+  .setLngLat([0, 0])
+  .addTo(map)
+  
+  function onDraging() {
+    let newlngLatEtMarker = my_marker_1.getLngLat()
+    //далее используем забранные из маркера его новые параметры где-либо.
+  }
+  my_marker_1.on('dragend', onDraging)  // ОБРАБОТЧИК, прикрепленный к маркеру.
+})
+
+
+
+
+
 //МЕТОДЫ у маркера
 //все методы - см. https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getlnglat.
 
 //в парамерты маркера добавить поле "shouldBeDraggable: true"
 my_marker_1.setDraggable(true)
+
+
 
 // УДАЛЕНИЕ маркера
 setTimeout(() => {
@@ -80,6 +117,7 @@ setTimeout(() => {
 setTimeout(() => {
   el.className = 'turn-off'
 }, 0)
+
 
 
 //ЗАПРОСИТЬ у el:
