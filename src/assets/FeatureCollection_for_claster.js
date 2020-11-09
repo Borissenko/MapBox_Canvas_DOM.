@@ -1,6 +1,5 @@
 export const forClasetrs = {
   type: "FeatureCollection",
-  
   features: [
     {
       type: "Feature",

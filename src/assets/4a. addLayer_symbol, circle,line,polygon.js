@@ -1,6 +1,7 @@
 // точки, линии, зоны
-// Добавление из bd при загрузке карты.
-//generator et a geoJSON - http://geojson.io/#map=10/55.7553/37.7600
+// https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#paint-symbol-icon-color
+
+//generator geoJSON - http://geojson.io/#map=10/55.7553/37.7600
 
 //пример добавления точки - https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/
 
@@ -121,7 +122,9 @@ export default {
       
       
       // == ИКОНКА с ПОДПИСЬЮ под ней.
-      //для использования СВОЕЙ img.png - см. пример https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/.
+      //для использования СВОЕЙ img.png вместо иконки - см. пример https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/.
+      //Доступные виды иконок - https://github.com/mapbox/mapbox-gl-styles
+      //Доступные виды иконок по старой версии - document.asd.map.listImages() в консоле набрать.
       map.addSource('places', {
         'type': 'geojson',
         'data': points
@@ -132,10 +135,12 @@ export default {
         'type': 'symbol',
         'source': 'places',
         'layout': {
-          'icon-image': '{icon}-15',    //"'icon-image': 'music'" - NO WORKING(!). We need "'music-15".
-          'icon-allow-overlap': true,    //разрешить перекрывать значек
+          'icon-image': '{icon}-15',    //'music' - NO WORKING(!). We need "music-15". 'circle-15', 'circle-stroked-15'
+          'icon-color': 'red',          //This can only be used with sdf-icons.
           'icon-size': 1.5,
           "icon-opacity": 1,
+          "icon-halo-blur": 0,
+          'icon-allow-overlap': true,    //разрешить перекрывать значек
           'icon-rotate': ['get', 'bearing'],   //для каждого отдельного point значение 'icon-rotate' будет браться из properties.bearing
           'icon-rotation-alignment': 'map',
           'icon-ignore-placement': true,   //If true, other symbols can be visible even if they collide with the icon.
@@ -143,7 +148,8 @@ export default {
           'icon-translate': [0, 0],    //смещение anchor'a from its original placement.
           
           "text-field": "{title}",   // ПОДПИСЬ под иконкой, для каждого отдельного point значение "text-field" будет браться из properties.title
-          "text-font": ['DIN Offc Pro Medium', 'Arial Unicode MS Bold',  'Arial Unicode MS Regular', 'DIN Offc Pro Italic'],
+          // "text-field": ['get', 'title'],   //аналогично
+          "text-font": ['Open Sans Regular'], // ['DIN Offc Pro Medium', 'Arial Unicode MS Bold',  'Arial Unicode MS Regular', 'DIN Offc Pro Italic'],
           'text-size': 5,
           "icon-text-fit": "none",    //"none", "width", "height", "both" - Масштабирует значок по размеру связанного текста.
           
@@ -159,8 +165,6 @@ export default {
           'text-line-height': 16,
           'text-max-width': 10,     //Units in ems
           
-          "icon-color": "#000",     //This can only be used with sdf-icons.
-          "icon-halo-blur": 0,
           'visibility': "visible"   //"none"
         },
         paint: {
@@ -169,19 +173,20 @@ export default {
           "text-halo-color": 'red',
           'text-halo-width': 2,
           // "font-weight"- здесь и нигде - нет!
-          
         }
       })
   
   
       // В роли иконки выступает ФОТОРГРАФИЯ.
       //https://docs.mapbox.com/mapbox-gl-js/example/add-image/
+      //https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/
       map.on('load', function () {
         map.loadImage(
           'https://upload.wikimedia.org/wikipedia/commons/7/7c/201408_cat.png',
           function (error, image) {
             if (error) throw error;
-            map.addImage('cat', image);
+            map.addImage('cat', image)      //создаем ресурс, если в роли иконки будет картинка
+            
             map.addSource('point', {
               'type': 'geojson',
               'data': {
@@ -193,7 +198,7 @@ export default {
                       'type': 'Point',
                       'coordinates': [0, 0]
                     }
-                  }
+                  },
                 ]
               }
             });
@@ -202,7 +207,7 @@ export default {
               'type': 'symbol',
               'source': 'point',
               'layout': {
-                'icon-image': 'cat',
+                'icon-image': 'cat',   //используем ранее заресурсивную картинку в роли иконки
                 'icon-size': 0.25
               }
             });
@@ -213,6 +218,11 @@ export default {
   
       //ФИЛЬТРАЦИЯ ВЫВЕДЕНИЯ ИКОНОК, основываясь на подписи, а значение фильтра вводим в <input type="text">.
       // https://docs.mapbox.com/mapbox-gl-js/example/filter-markers-by-input/
+      
+      
+      
+      
+      
       
       
       

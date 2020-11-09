@@ -10,8 +10,9 @@ export const points = {
         "icon": 'music',  //'bicycle', 'music', 'bar', 'art-gallery', 'rocket'  //"star"- NO working,
         "marker-color": "#f22121",   //NO working,
         "marker-size": "medium",     //переопраделяется в map.addLayer({}).
-        "title": "Привет, Ola!",     //подпись под иконкой
-        'description': '<strong>music</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        "title": "Прив!",     //подпись под иконкой
+        'description': '<strong>music</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade</p>',
+        'age': 15
         },
       "geometry": {
         "type": "Point",
@@ -26,7 +27,8 @@ export const points = {
         "marker-color": "#f22121",
         "marker-size": "medium",
         "title": "Привет!",
-        'description': '<strong>bicycle</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        "description": '<strong>bicycle</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make Pleasant</a> is a handmade and </p>',
+        'age': 15
         },
       "geometry": {
         "type": "Point",
@@ -41,7 +43,8 @@ export const points = {
         "marker-color": "#f22121",
         "marker-size": "medium",
         "title": "Привет, Ola!",
-        'description': '<strong>bar</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        "description": '<strong>bar</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade</p>',
+        'age': 33
         },
       "geometry": {
         "type": "Point",
@@ -56,7 +59,8 @@ export const points = {
         "marker-color": "#f22121",
         "marker-size": "medium",
         "title": "Hi!",
-        'description': '<strong>rocket</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        "description": '<strong>rocket</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade</p>',
+        'age': 22
         },
       "geometry": {
         "type": "Point",
@@ -71,7 +75,7 @@ export const points = {
         "marker-color": "#ecd53e",
         "marker-size": "medium",
         "title": "Привет, Kola!",
-        'description': '<strong>theatre</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+        "description": '<strong>theatre</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade</p>',
         },
       'geometry': {
         'type': 'Point',

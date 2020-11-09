@@ -1,7 +1,7 @@
 //произвольный маркер
 //аналогичен point'у, но имеет html-дизайнерский вид.
 //https://docs.mapbox.com/mapbox-gl-js/api/markers/   <<== см настройки(!).
-//https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
+//https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/  - Add custom marker
 //https://docs.mapbox.com/mapbox-gl-js/example/drag-a-marker/ - перемещаемый маркер.
 
 import mapboxgl from "mapbox-gl"
@@ -20,6 +20,7 @@ el.innerHTML = `<div  id="${feature.properties.id}" data-action-name="${feature.
 el.style.backgroundImage = 'url(https://placekitten.com/g/' + marker.properties.iconSize.join('/') + '/)'
 el.style.width = feature.properties.iconSize[0] + 'px';
 el.style.height = feature.properties.iconSize[1] + 'px'
+//За счет наличия у маркера html мы можем его коренному диву задать z-index(!).
 
 //на html вешаем ОБРАБОТЧИК.
 //camElement.getElementsByClassName('gg')[0]   //срабатывает.
@@ -80,6 +81,7 @@ map.on('load', () => {
 })
 
 
+
 //ПЕРЕТАСКИВАЕМЫЙ маркер.
 //https://docs.mapbox.com/mapbox-gl-js/example/drag-a-marker/
 map.on('load', () => {
@@ -87,9 +89,13 @@ map.on('load', () => {
   .setLngLat([0, 0])
   .addTo(map)
   
+  const coordinates = document.getElementById('coordinates')  //<div id="coordinates" class="coordinates"></div>
   function onDraging() {
     let newlngLatEtMarker = my_marker_1.getLngLat()
     //далее используем забранные из маркера его новые параметры где-либо.
+  
+    //например, выводим координаты в стороннем диве:
+    coordinates.innerHTML = 'Longitude: ' + newlngLatEtMarker.lng + '<br />Latitude: ' + newlngLatEtMarker.lat
   }
   my_marker_1.on('dragend', onDraging)  // ОБРАБОТЧИК, прикрепленный к маркеру.
 })

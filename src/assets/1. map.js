@@ -35,6 +35,7 @@ export default {
     
     
     //МЕТОДЫ экземпляра карты.
+    map.rotateTo(180, { duration: 10000 })  //плавное вращение карты
     map.resize()     //
     
     

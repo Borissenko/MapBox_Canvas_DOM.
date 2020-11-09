@@ -16,7 +16,6 @@ import {points, lines, line, polygons} from '@/assets/geoJSON'
 
 export default {
   mounted() {
-    // mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZnNic20wMzlrMnFxa3didHFyYzFzIn0.RdgEdp7LaXIslsPrEGpwmA';
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g';  //my
     
     var map = new mapboxgl.Map({
@@ -27,42 +26,35 @@ export default {
     })
     
     map.on('load', () => {
-      map.addSource('myPoints', {    //for v-1
+      map.addSource('myPoints', {
         'type': 'geojson',
         'data': points
       })
   
       let feature = points.features[0]
   
-      let my_popup = new mapboxgl.Popup({ offset: 25 })
-      .setText('Go!')
       
-      const my_marker_1 = new mapboxgl.Marker({
-        draggable: true
-      })  // если el не задавать, то по-умолчанию - каплевидный значек.
-      .setPopup(my_popup)              // attach popup to marker
-      .setLngLat([37.65, 55.75])
-      .addTo(map)
-      
-      // map.addLayer({
-      //   'id': '_points_77',
-      //   'type': 'symbol',
-      //   "source": "myPoints",
-      //   'layout': {
-      //     'icon-image': 'music-15',    //"'icon-image': 'music'" - NO WORKING(!). We need 'music-15'.
-      //     'icon-allow-overlap': true,    //разрешить перекрывать значек
-      //     'icon-size': 1.5,
-      //
-      //     "text-field": "5",   // ПОДПИСЬ под иконкой, для каждого отдельного point значение "text-field" будет браться из properties.title
-      //     "text-font": ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-      //     "text-offset": [0, -0.5],   //ВЫНОС текста относительно center-bottom иконки.
-      //     'text-size': 45,
-      //     "text-anchor": "top", // где показывать попап
-      //   },
-      //   paint: {
-      //     "text-color": "#48f6cd"
-      //   }
-      // })
+      map.addLayer({
+        'id': 'pointsId',
+        'type': 'symbol',
+        "source": "myPoints",
+        'layout': {
+          'icon-image': 'music-11',    //"'icon-image': 'music'" - NO WORKING(!). We need 'music-15'.
+          // 'icon-allow-overlap': true,    //разрешить перекрывать значек
+          // 'icon-size': 1.5,
+          //
+          "text-field": '{title}',
+          // "text-field": ['get', 'title'],
+          "text-font": ['Open Sans Regular'],
+          // "text-offset": [0, -0.5],   //ВЫНОС текста относительно center-bottom иконки.
+          // 'text-size': 45,
+          // "text-anchor": "top", // где показывать попап
+        },
+        // paint: {
+        //   "text-color": "#48f6cd"
+        // },
+        // filter: ['==', ['number', ['get', 'age']], 15]
+      })
       
     })
   }

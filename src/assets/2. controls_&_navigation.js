@@ -1,4 +1,5 @@
 //кнопки навигации
+//https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker#getelement
 let navigationControl_1 = new mapboxgl.NavigationControl()
 let navigationControl_2 = new mapboxgl.NavigationControl({
   showCompass: true,
