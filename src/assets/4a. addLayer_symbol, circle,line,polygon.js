@@ -44,6 +44,7 @@ export default {
         //   "type": "geojson",
         //   "data": polygons // or   'url': 'mapbox://examples.dl46ljcs'
         // },
+        "filter": [],  //Only features that match the filter are displayed.
         "layout": {},
         "paint": {
           "fill-color": "#73e522",
@@ -52,8 +53,7 @@ export default {
           "visibility": "visible",  // "none"
           "fill-sort-key": 5,       //Типо z-index. Features with a higher sort key will appear above features with a lower sort key.
           "fill-translate-anchor": "map"  //"viewport". Относительно чего будет работать "fill-translate".
-        },
-        "filter": {}  //Only features that match the filter are displayed.
+        }
       })
       
     
@@ -124,7 +124,9 @@ export default {
       // == ИКОНКА с ПОДПИСЬЮ под ней.
       //для использования СВОЕЙ img.png вместо иконки - см. пример https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/.
       //Доступные виды иконок - https://github.com/mapbox/mapbox-gl-styles
-      //Доступные виды иконок по старой версии - document.asd.map.listImages() в консоле набрать.
+      
+      //ЛОСТУПНЫЕ виды иконок (Нр, по старой версии mapBox) - document.asd.map.listImages() в консоле набрать.
+      
       map.addSource('places', {
         'type': 'geojson',
         'data': points
@@ -214,12 +216,33 @@ export default {
           }
         );
       })
-  
-  
-      //ФИЛЬТРАЦИЯ ВЫВЕДЕНИЯ ИКОНОК, основываясь на подписи, а значение фильтра вводим в <input type="text">.
-      // https://docs.mapbox.com/mapbox-gl-js/example/filter-markers-by-input/
       
       
+      //В роли иконки - svg-IMG. V-2.
+      import routeCircle from '../assets/svg/route-circle.svg'
+  
+      if (!this.map.hasImage('routeCircle')) {   //загрузка img в ресурс карты.
+        let img = new Image(30, 30)    //создали пустую болванку для img.
+        img.onload = () => this.map.addImage('routeCircle', img)
+        img.src = routeCircle;
+      }
+  
+      this.map.addLayer({
+        'id': 'layerId',
+        'type': 'symbol',
+        'source': 'places',
+        'layout': {
+          'icon-image': 'routeCircle',
+          'icon-size': 1,
+          
+          'text-field': ['get', 'text'],
+          'text-font': ['Open Sans Regular'],
+          'text-size': 13,
+        },
+        'paint': {
+          'text-color': '#080808',
+        }
+      });
       
       
       
@@ -228,35 +251,24 @@ export default {
       
     })
   },
-  methods: {
-    turnLayerOff(map, clickedLayerId) {
-      // map = map
-      // clickedLayerId = 'circleId'
-      e.preventDefault()
-      e.stopPropagation()
-      let visibility = map.getLayoutProperty(clickedLayerId, 'visibility')
-  
-      // toggle layer visibility by changing the layout object's visibility property
-      if (visibility === 'visible') {
-        map.setLayoutProperty(clickedLayer, 'visibility', 'none')
-      } else {
-        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-      }
-    }
-  }
 }
 
 
 
-//.......................ДОПОЛНИТЕЛЬНО:
+//ФИЛЬТРАЦИЯ ВЫВЕДЕНИЯ ИКОНОК, основываясь на подписи, а значение фильтра получаем из <input type="text">.
+// https://docs.mapbox.com/mapbox-gl-js/example/filter-markers-by-input/
 
 
+
+
+// = УПРАВЛЕНИЕ СЛОЕМ =.
 
 // ОБНОВЛЕНИЕ ресурсов при их изменении
-map.getSource(sourceName).setData({
-  'type': 'FeatureCollection',
-  'features': features
-})
+map.getSource(sourceName)
+  .setData({
+    'type': 'FeatureCollection',
+    'features': features
+  })
 
 
 
@@ -277,6 +289,23 @@ function removeSelectedPolygons(sourceName) {
 //https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/
 
 // см. turnLayerOff() и addLayer "circle".
+methods: {
+  turnLayerOff(map, clickedLayerId) {
+    // map = map
+    // clickedLayerId = 'circleId'
+    e.preventDefault()
+    e.stopPropagation()
+    let visibility = map.getLayoutProperty(clickedLayerId, 'visibility')
+    
+    // toggle layer visibility by changing the layout object's visibility property
+    if (visibility === 'visible') {
+      map.setLayoutProperty(clickedLayer, 'visibility', 'none')
+    } else {
+      map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+    }
+  }
+}
+
 
 
 
@@ -289,38 +318,30 @@ function removeSelectedPolygons(sourceName) {
 //https://www.npmjs.com/package/@turf/boolean-point-in-polygon
 //(источник информации - https://habr.com/ru/company/ruvds/blog/489828/)
 
-const pointInPolygon = require('@turf/boolean-point-in-polygon').default;
-
+const pointInPolygon = require('@turf/boolean-point-in-polygon').default
 const colorado = {
   "type": "Polygon",
-  "coordinates": [[
-    [-109, 41],
-    [-102, 41],
-    [-102, 37],
-    [-109, 37],
-    [-109, 41]
-  ]]
-};
+  "coordinates": [[[-109, 41], [-102, 41], [-102, 37], [-109, 37], [-109, 41]]]
+}
 
 const denver = {
   "type": "Point",
   "coordinates": [-104.9951943, 39.7645187]
-};
-
+}
 const sanFrancisco = {
   "type": "Point",
   "coordinates": [-122.4726194, 37.7577627]
-};
+}
 
-// true
-console.log(pointInPolygon(denver, colorado));
-
-// false
-console.log(pointInPolygon(sanFrancisco, colorado));
+pointInPolygon(denver, colorado)  // true
+pointInPolygon(sanFrancisco, colorado)  // false
 
 
 
-//ОБРАБОТЧИК СОБЫТИЯ ПО КЛИКУ НА конкретный, например, полигон.
+
+
+
+//КЛИК на КОНКРЕТНЫЙ полигон.
 //https://docs.mapbox.com/mapbox-gl-js/example/polygon-popup-on-click/
 map.on('click', 'myPolygonId', function (e) {    //e - дает индивидуальность ответа на клик по одному из полигонов полигон-слоя.
   new mapboxgl.Popup()
@@ -339,5 +360,31 @@ map.on('mouseleave', 'states-layer', function () {
 
 
 
-//ДОПОЛНИТЕЛЬНО
+
+
+
+
+//БОКОВОЙ СПИСОК МАРКЕРОВ
+//https://docs.mapbox.com/help/tutorials/building-a-store-locator/#add-event-listeners
+
+
+
+
+
+
+
+// =МЕТОДЫ СЛОЯ =
+
+map.getStyle().layers  //получение списка существующих слоев. В том числе БАЗИСНОЙ КАРТЫ(!),
+//И далее ими МОЖНО УПРАВЛЯТЬ(!)
+map.setPaintProperty(layerId, 'fill-color', color)      //изменение значения Paint-параметра у слоя
+
+
 map.getLayer({})  //проверка наличия слоя
+map.getLayoutProperty(clickedLayerId, 'visibility')         //запрос значения Layout-параметра слоя
+map.setLayoutProperty(clickedLayer, 'visibility', 'none')   //изменение значения Layout-параметра у слоя
+
+map.setPaintProperty(layer.value, 'fill-color', color)      //изменение значения Paint-параметра у слоя
+
+
+

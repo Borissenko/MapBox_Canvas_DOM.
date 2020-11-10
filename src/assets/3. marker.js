@@ -22,7 +22,9 @@ el.style.width = feature.properties.iconSize[0] + 'px';
 el.style.height = feature.properties.iconSize[1] + 'px'
 //За счет наличия у маркера html мы можем его коренному диву задать z-index(!).
 
-//на html вешаем ОБРАБОТЧИК.
+
+//ОБРАБОТЧИК  на html маркера.
+//A-вариант.
 //camElement.getElementsByClassName('gg')[0]   //срабатывает.
 //camElement.getElementById('gg')              //НЕ срабатывает почему-то.
 el.querySelector("#gg")
@@ -33,10 +35,18 @@ el.querySelector("#gg")
     console.log('doIt()')
   }
 }
-//или 2 вариант обработчика
-el.addEventListener('click', function () {
-  window.alert(feature.properties.message);
+
+
+//B-вариант обработчика.
+el.addEventListener('click', function (e) {
+  window.alert(feature.properties.message)
+  createPopUp(marker)
 });
+
+
+
+
+
 
 
 // описываем CSS для маркера и его попапа
@@ -67,18 +77,22 @@ el.addEventListener('click', function () {
 //ПОПАП, интегрированный в маркер.
 // Оработчик для вызова попапа вешать не требуется - т.к. попап пришиваем непосредственно к маркеру,
 // и ".setLngLat([37.618425, 55.751247])" - тоже не требуется.
+
 let my_popup = new mapboxgl.Popup({offset: 25})
 .setHTML('<h3>' + feature.properties.title + '</h3>')
 // attach popup to marker - см. ниже.
 
 
-//ИНИЦИИРУЕМ маркер
+
+
+//ИНИЦИИРУЕМ маркер (с прикрепленным попапом).
 map.on('load', () => {
   const my_marker_1 = new mapboxgl.Marker(el, {offset: [0, -23]})  // если el не задавать, то по-умолчанию - каплевидный значек.
   .setPopup(my_popup)              // attach popup to marker
   .setLngLat([37.65, 55.75])
   .addTo(map)
 })
+
 
 
 
@@ -112,10 +126,12 @@ my_marker_1.setDraggable(true)
 
 
 
+
 // УДАЛЕНИЕ маркера
 setTimeout(() => {
   my_marker_1.remove()
 }, 5000)
+
 
 
 
@@ -130,7 +146,8 @@ setTimeout(() => {
 let class_ = el.className    //запрашиваем, "vesna red". Дополнительно с помощью el.className можно и присуждать.
 let classes = el.classList   //он круче, чем el.className. ['vesna', 'red'].
 
-
+var activeItem = document.getElementsByClassName('active')
+activeItem[0].classList.remove('active')  //удаление класса у элемента
 
 
 

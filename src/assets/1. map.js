@@ -10,6 +10,8 @@ export default {
     //En-lng map: mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZnNic20wMzlrMnFxa3didHFyYzFzIn0.RdgEdp7LaXIslsPrEGpwmA';  // чужой, АНГЛОЯЗЫЧНЫЕ названия, рабочий
   
     //ГЕНЕРАЦИЯ ЭКЗЕМПЛЯРА карты, map_instance.
+    //https://docs.mapbox.com/mapbox-gl-js/api/map/
+    //слоями базисной карты ТОЖЕ МОЖНО УПРАВЛЯТЬ(!). См. в 4а.addLayer.
     let map = new mapboxgl.Map({
       container: 'map',        //id того дива, в который будет загружаться карта.
       style: 'mapbox://styles/mapbox/streets-v8',  // темный стиль карты - 'mapbox://styles/mapbox/dark-v10'

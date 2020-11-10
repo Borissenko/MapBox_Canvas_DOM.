@@ -35,9 +35,10 @@ map.keyboard.enable()
 map.on('click', 'layerId', function (e) {
   map.flyTo({
     center: e.features[0].geometry.coordinates,
-    essential: true  // this animation is considered essential with respect to prefers-reduced-motion
-  });
-});
+    zoom: 15,
+    essential: true,  // this animation is considered essential(основной, по-сути) with respect to prefers-reduced-motion
+  })
+})
 
 
 

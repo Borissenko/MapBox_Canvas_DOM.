@@ -26,35 +26,48 @@ export default {
     })
     
     map.on('load', () => {
-      map.addSource('myPoints', {
-        'type': 'geojson',
-        'data': points
+  
+      let popup = new mapboxgl.Popup({
+        closeButton: true,   //кестик на попапе для его удаления
+        closeOnClick: true,  // закрыть попап при клике аутсайд
+        offset: 25
       })
-  
-      let feature = points.features[0]
-  
+      .setLngLat([37.618425, 55.751247])
+      .setHTML(`
+                <div id="popup1">
+                  <div>GO!</div>
+                  <button data-action-name="add">add</button>
+                  <button data-action-name="delete">delete</button>
+                </div>
+         `)
+      //.setText('Go!') - вместо .setHTML() можно использовать. Более простой вариант.
+      .addTo(map)
       
-      map.addLayer({
-        'id': 'pointsId',
-        'type': 'symbol',
-        "source": "myPoints",
-        'layout': {
-          'icon-image': 'music-11',    //"'icon-image': 'music'" - NO WORKING(!). We need 'music-15'.
-          // 'icon-allow-overlap': true,    //разрешить перекрывать значек
-          // 'icon-size': 1.5,
-          //
-          "text-field": '{title}',
-          // "text-field": ['get', 'title'],
-          "text-font": ['Open Sans Regular'],
-          // "text-offset": [0, -0.5],   //ВЫНОС текста относительно center-bottom иконки.
-          // 'text-size': 45,
-          // "text-anchor": "top", // где показывать попап
-        },
-        // paint: {
-        //   "text-color": "#48f6cd"
-        // },
-        // filter: ['==', ['number', ['get', 'age']], 15]
-      })
+      const my_marker_1 = new mapboxgl.Marker()  // если el не задавать, то по-умолчанию - каплевидный значек.
+      .setLngLat([37.65, 55.75])
+      .addTo(map)
+      
+      console.log('document.getElementsByClassName()===', document.getElementsByClassName('mapboxgl-popup'))
+      
+      // map.addSource('myPoints', {
+      //   'type': 'geojson',
+      //   'data': points
+      // })
+      // let feature = points.features[0]
+      // map.addLayer({
+      //   'id': 'pointsId',
+      //   'type': 'symbol',
+      //   "source": "myPoints",
+      //   'layout': {
+      //     'icon-image': 'music-11',
+      //     "text-field": '{title}',
+      //     // "text-field": ['get', 'title'],
+      //     "text-font": ['Open Sans Regular']
+      //   },
+      //   paint: {
+      //     "text-color": "#48f6cd"
+      //   }
+      // })
       
     })
   }
