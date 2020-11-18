@@ -1,3 +1,5 @@
+//https://docs.mapbox.com/mapbox-gl-js/api/map/#map#resize
+
 import mapboxgl from "mapbox-gl"
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'  //it is no work !
 import 'mapbox-gl/dist/mapbox-gl.css'                    // it is necessary exactly!
@@ -8,36 +10,73 @@ export default {
     //прикрутили ТОКЕН, который генерируется в личном кабинете компании https://account.mapbox.com/
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g'  // my
     //En-lng map: mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZnNic20wMzlrMnFxa3didHFyYzFzIn0.RdgEdp7LaXIslsPrEGpwmA';  // чужой, АНГЛОЯЗЫЧНЫЕ названия, рабочий
-  
+    
     //ГЕНЕРАЦИЯ ЭКЗЕМПЛЯРА карты, map_instance.
-    //https://docs.mapbox.com/mapbox-gl-js/api/map/
+    //https://docs.mapbox.com/mapbox-gl-js/api/map/ - методы map.
     //слоями базисной карты ТОЖЕ МОЖНО УПРАВЛЯТЬ(!). См. в 4а.addLayer.
     let map = new mapboxgl.Map({
       container: 'map',        //id того дива, в который будет загружаться карта.
       style: 'mapbox://styles/mapbox/streets-v8',  // темный стиль карты - 'mapbox://styles/mapbox/dark-v10'
-      center: [37.618423, 55.751244],   //[lng, lat], Долгота идёт перед широтой.
+      center: [37.618423, 55.751244],   //[lng, lat], Долгота, широта. //let {longitude, latitude} = map.getCenter().
       zoom: 12.5,
       minZoom: 4,
       hash: false,
       showCompass: true
     })
     
-   
-    map.on('style.load', () => {  //map.on('style.load' - нужен ли сдесь??
-  
-      //CLICK в ЛЮБОЙ ТОЧКЕ КАРТЫ.
-      map.on('click', (e) => {
-        console.log(e)    //в event есть ГЕОГРАФИЧЕСКИЕ и БРОУЗЕРНЫЕ координаты клика(!)
-      })
+    
+    //CLICK в ЛЮБОЙ ТОЧКЕ КАРТЫ.
+    map.on('click', (e) => {                //https://docs.mapbox.com/mapbox-gl-js/api/events/#evented#on
+      console.log(e)    //в event есть ГЕОГРАФИЧЕСКИЕ и БРОУЗЕРНЫЕ координаты клика(!)
       
-      map.on('zoom', function() {})
-      map.on('mousemove', function() {})
+      e.lngLat    // геогр координаты
+      e.point   //The pixel coordinates of the mouse cursor
+      e.preventDefault()
+      e.target
+      e.type  //тип события
+      e.originalEvent //The DOM event which caused the map event.
+      
+      //User interaction handlers - https://docs.mapbox.com/mapbox-gl-js/api/handlers/#boxzoomhandler
+      
+      
+      //Получить все фичи всех слоев, которые находяться в точке клика.
+      e.point      //{x: 681, y: 190} - координаты клика по диву с картой.
+      var features = map.queryRenderedFeatures(e.point)  //Все ФИЧИ ВСЕХ слоев, которые проходят в этой точке.
+      
+      
+      //Все features, попадающие в квадрат карты, где центр квадрата - в точке клика
+      // + (!) принадлежат только слою 'my-layer-name'.
+      let point = {x: e.point.x, y: e.point.y}
+      var width = 10;
+      var height = 20;
+      var features = map.queryRenderedFeatures([
+        [point.x - width / 2, point.y - height / 2],
+        [point.x + width / 2, point.y + height / 2]
+      ], {layers: ['my-layer-name']});
+      
+      
     })
+    
+    map.on('mousemove', function () {})
+    
+    map.on('zoom', function () {})
+    map.boxZoom.disable()   // выключение zoom-обработчика, https://docs.mapbox.com/mapbox-gl-js/api/handlers/#boxzoomhandler#isenabled
   
+    map.on('sourcedata', function(e) {     //https://docs.mapbox.com/mapbox-gl-js/api/events/#mapmouseevent#type
+      if (e.isSourceLoaded) {
+       // Do something when the source has finished loading
+      }
+    })
+    
+    
+    
+    
     
     
     //МЕТОДЫ экземпляра карты.
-    map.rotateTo(180, { duration: 10000 })  //плавное вращение карты
+    //https://docs.mapbox.com/mapbox-gl-js/api/map/#map
+  
+    map.rotateTo(180, {duration: 10000})  //плавное вращение карты
     map.resize()     //
     
     
@@ -60,7 +99,7 @@ export default {
         if (topRight[0] < item[0]) topRight[0] = item[0];
         if (topRight[1] < item[1]) topRight[1] = item[1];
       })
-  
+      
       return [leftBottom[0], leftBottom[1], topRight[0], topRight[1]]
     }
   }

@@ -66,6 +66,8 @@ let bounds = {
 }
 
 
+
+
 //Получить координары сектора карты, который ограничен скрином броузерного окна.
 function getVisiblePartOfMapCoordinates(map) {
   let coords2 = [];
@@ -90,4 +92,32 @@ function getVisiblePartOfMapCoordinates(map) {
 
 
 
+
+
+// Расчет километража 1 градуса долготы и широты.
+//Начало координат - пересечение Гринвича и экватора.
+let {lng, lat} = map.getCenter()   // долгота, широта.
+let Moscow = {lng: 37.56626254924169, lat: 55.72995530726897}
+
+//Длинна 1 гр ДОЛГОТЫ (longitude, lng). Сильно зависит от широты нахождения.
+let LongEtLan = 111321 * cos(lng)   // длинна в метрах у 1 градуса долготы, lng - широта в ГРАДУСАХ(не в радианах).
+//1гр долготы на уровне Москвы (у которой lat, широта = 55.751244) = 63км/градус_долготы(lng).
+
+
+//Длинна 1 гр ШИРОТЫ (latitude, lat).
+let LongEtLongitude = 111319   //метров/гр_широты.
+
+
+
+
+
+
+//Формула вычисления азимута на широте Москвы
+var getAzimut = function (a, b) {
+  var azimut = Math.atan2(b[0] - a[0], (b[1] - a[1])) * 57.295779513082
+  if (azimut < 0) {
+    azimut = 360 + azimut
+  }
+  return +azimut.toFixed(2)
+}
 

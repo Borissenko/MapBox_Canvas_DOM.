@@ -55,6 +55,66 @@ map.on('mouseleave', 'polygonLayerId', function () {
 })
 
 
+//2. Вызов попапа более круто. Вызываем ОДИН и тот же папап, но в разных местах, а не гененируем каждым кликом новый.
+this.map.addSource(symbolSourse,{
+  'type': 'geojson',
+  'data': {
+    'type': 'FeatureCollection',
+    'features': featureCollection
+  }
+});
+
+var popup = new mapboxgl.Popup({
+  closeButton: false,
+  closeOnClick: false,
+  // className: 'map-popup'
+});
+
+var _this = this;
+
+this.map.on('mousemove', symbollayerId, function(e) {
+  // Change the cursor style as a UI indicator.
+  _this.map.getCanvas().style.cursor = 'pointer';
+  
+  var coordinates = e.features[0].geometry.coordinates.slice();
+  // console.log(coordinates);
+  // console.log(e);
+  // var description = e.features[0].geometry.coordinates[2];
+  var description = e.features[0].properties.description;
+  
+  // Ensure that if the map is zoomed out such that multiple
+  // copies of the feature are visible, the popup appears
+  // over the copy being pointed to.
+  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+  }
+  
+  // Populate the popup and set its coordinates
+  // based on the feature found.
+  popup
+  .setLngLat(coordinates)
+  .setHTML(description)
+  .addTo(_this.map);
+  
+  if (e.features.length > 0) {
+    if (_this.hoveredPointId) {
+      _this.map.setFeatureState({ source: symbolSourse, id: _this.hoveredPointId },{ hover: false });
+    }
+    _this.hoveredPointId = e.features[0].id;
+    _this.map.setFeatureState({ source: symbolSourse, id: _this.hoveredPointId },{ hover: true });
+  }
+});
+
+this.map.on('mouseleave', symbollayerId, function() {
+  if (_this.hoveredPointId) {
+    _this.map.setFeatureState({ source: symbolSourse, id: _this.hoveredPointId },{ hover: false });
+  }
+  _this.hoveredPointId = null;
+  
+  _this.map.getCanvas().style.cursor = '';
+  popup.remove();
+});
+
 
 
 //3. ОБРАБОТЧИК события В САМОМ попапе.

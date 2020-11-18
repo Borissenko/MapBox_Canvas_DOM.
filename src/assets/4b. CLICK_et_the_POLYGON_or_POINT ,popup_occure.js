@@ -1,6 +1,8 @@
 //Появление попапа при клике по полигону
 //https://docs.mapbox.com/mapbox-gl-js/example/polygon-popup-on-click/
 
+//ОБРАБОТЧИКИ - https://docs.mapbox.com/mapbox-gl-js/api/events/#mapmouseevent#target
+
 import mapboxgl from "mapbox-gl";
 import {points, lines, line, polygons} from '@/assets/geoJSON'
 
@@ -40,6 +42,7 @@ export default {
 //...............
       // When a click event occurs on a feature in the states layer, open a popup at the
       // location of the click, with description HTML from its properties.
+      
       map.on('click', 'myPolygonId', function (e) {    //myPolygonId - это 'id' et map.addLayer(), при добавлении ПОЛИГОНОВ или ТОЧЕК.
         
         // targetSTAFF
@@ -49,6 +52,10 @@ export default {
         e.features[0]._geometry.coordinates
         e.features[0].source   // 'myPolygonId'
         e.lngLat.lng
+        var featuresData = e.features[0].properties
+  
+      
+        
         
         //получение координат кликнутого полигона/иконки и коррекция координат.
         let coordinates = e.features[0].geometry.coordinates.slice()  //применимо более для точки.
@@ -67,7 +74,11 @@ export default {
         .addTo(map);
       })
 
+      
+      
 //...............
+//hover-эфект для полигона.
+//https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
 // Изменение paint-настроек (здесь - fill-opacity полигона), описанных в map.addLayer({}), при наведении мышкой.
 // When the user moves their mouse over the state-fill layer, we'll update the
 // feature state for the feature under the mouse.
@@ -105,6 +116,7 @@ export default {
       })
 
       
+      
 //...............
       //Создание курсора POINTER при наведении на элемент слоя.
       // Change the cursor to a pointer when the mouse is over the states layer.
@@ -117,6 +129,7 @@ export default {
         map.getCanvas().style.cursor = ''
       })
 
+      
 //...............
       //обработчик для СЕНСОРНЫХ этранов
       import hammer from 'hammerjs'

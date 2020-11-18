@@ -46,8 +46,12 @@ export default {
       const my_marker_1 = new mapboxgl.Marker()  // если el не задавать, то по-умолчанию - каплевидный значек.
       .setLngLat([37.65, 55.75])
       .addTo(map)
-      
-      console.log('document.getElementsByClassName()===', document.getElementsByClassName('mapboxgl-popup'))
+  
+      map.on('click', function (e) {
+        var features = map.queryRenderedFeatures(e.point)
+        console.log('e.point ====', e.point)
+        console.log('features ====', features)
+      })
       
       // map.addSource('myPoints', {
       //   'type': 'geojson',
