@@ -2,15 +2,17 @@
 
 //Рисуем канвасную картиночку - кружок с ободком.
 function addCircleImage(color, hasArrow, arrowColor = color) {
-  let imgName = `currentCircle${hasArrow ? '_arr' : ''}_${color}`;
+  let imgName = `currentCircle${hasArrow ? '_arr' : ''}_${color}`
+  if (this.map.hasImage(imgName)) this.map.removeImage(imgName)      //удаление картинки из ресурсов карты
+  
   if (!this.map.hasImage(imgName)) {
     let context = document.createElement('canvas').getContext('2d');
     let centerX = 26, centerY = 26, radius = 13;
     
-    // нарисуем круг в цвет линии с черной и белой обводкой
+    // рисуем круг с черной и белой обводкой
     context.beginPath();
     context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    context.fillStyle = color;
+    context.fillStyle = 'red'
     context.fill();
     context.lineWidth = 1;
     context.strokeStyle = "black";

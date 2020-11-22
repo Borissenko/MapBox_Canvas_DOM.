@@ -123,6 +123,9 @@ map.on('load', () => {
 
 //в парамерты маркера добавить поле "shouldBeDraggable: true"
 my_marker_1.setDraggable(true)
+my_marker_1
+.setLngLat([ x, y])
+.setRotation(angle);
 
 
 

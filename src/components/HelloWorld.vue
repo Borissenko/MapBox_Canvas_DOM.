@@ -15,7 +15,15 @@ import Supercluster from 'supercluster';
 import {points, lines, line, polygons} from '@/assets/geoJSON'
 
 export default {
+  data: () => ({
+    dd: 5,
+    ww: null
+  }),
   mounted() {
+    let aa = this.dd + 7
+    this.ww = aa
+    console.log('this.ww ===', this.ww)
+    
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g';  //my
     
     var map = new mapboxgl.Map({

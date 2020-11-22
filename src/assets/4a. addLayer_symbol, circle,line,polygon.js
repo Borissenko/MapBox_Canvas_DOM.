@@ -54,7 +54,7 @@ export default {
           "fill-sort-key": 5,       //Типо z-index. Features with a higher sort key will appear above features with a lower sort key.
           "fill-translate-anchor": "map"  //"viewport". Относительно чего будет работать "fill-translate".
         }
-      })
+      }, 'hospitals')   // Слой 'hospitals' будет ВЫШЕ слоя myPolygonId(!).  Этот аргумент можно не указывать.
       
     
       
@@ -100,28 +100,28 @@ export default {
           'visibility': 'visible'  // make layer visible by default - ДЛЯ ВКЛЮЧЕНИЯ/ВЫКЛЮЧЕНИЯ слоя.
         },
         'paint': {
-          'circle-radius': 8,
           'circle-color': 'rgba(55,148,179,1)',
           "circle-opacity": 1,
           'circle-stroke-color': 'red',  //обводка
           'circle-stroke-opacity': 1,
           'circle-stroke-width': 1,   //Units in pixels
   
-  
-          // "circle-radius": [    //изменение радиуса кружка в зависимости от zoom. https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/#types
-          //   "interpolate", ["linear"], ["zoom"],
-          //   // zoom is 5 (or less) -> circle radius will be 1px
-          //   5, 1,
-          //   // zoom is 10 (or greater) -> circle radius will be 5px
-          //   10, 5
-          // ]
+          //'circle-radius': 8,
+          "circle-radius": [    //изменение радиуса кружка в зависимости от zoom. https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/#types
+            "interpolate", ["linear"], ["zoom"],
+            // zoom is 5 (or less) -> circle radius will be 1px
+            5, 1,
+            // zoom is 10 (or greater) -> circle radius will be 5px
+            10, 5
+          ]
         }
-      })
+      }, 'hospitals')   // Слой circleId будет НИЖЕ слоя 'hospitals'(!).
       
       
       
       
-      // == ИКОНКА с ПОДПИСЬЮ под ней.
+      // == 'symbol' (ИКОНКА) с ПОДПИСЬЮ под ней.
+      //= https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#symbol
       //для использования СВОЕЙ img.png вместо иконки - см. пример https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/.
       //Доступные виды иконок - https://github.com/mapbox/mapbox-gl-styles
       
@@ -146,7 +146,7 @@ export default {
           'icon-rotate': ['get', 'bearing'],   //для каждого отдельного point значение 'icon-rotate' будет браться из properties.bearing
           'icon-rotation-alignment': 'map',
           'icon-ignore-placement': true,   //If true, other symbols can be visible even if they collide with the icon.
-          "icon-offset": [0, 0],      //смещение относительно anchor.
+          "icon-offset": [0, 0],      //смещение относительно anchor, [вправо от правой стороны ИКОНКИ, down от дна иконки], т.е. С УЧЕТОМ угла поворота иконки.
           'icon-translate': [0, 0],    //смещение anchor'a from its original placement.
           
           "text-field": "{title}",   // ПОДПИСЬ под иконкой, для каждого отдельного point значение "text-field" будет браться из properties.title
@@ -179,7 +179,7 @@ export default {
       })
   
   
-      // В роли иконки выступает ФОТОРГРАФИЯ.
+      // В роли 'symbol' выступает ФОТОРГРАФИЯ.
       //https://docs.mapbox.com/mapbox-gl-js/example/add-image/
       //https://docs.mapbox.com/mapbox-gl-js/example/geojson-markers/
       map.on('load', function () {
@@ -203,7 +203,7 @@ export default {
                   },
                 ]
               }
-            });
+            })
             map.addLayer({
               'id': 'points',
               'type': 'symbol',
@@ -218,9 +218,23 @@ export default {
       })
       
       
-      //В роли иконки - svg-IMG. V-2.
-      import routeCircle from '../assets/svg/route-circle.svg'
+      
+      // .................
+      // Добавление картинки в ресурс
+      import iconCar from './iconCar.'
+      
+      if (!this.map.hasImage('iconCar')) {
+        let imgCar = new Image(20, 24);
+        imgCar.onload = () => this.map.addImage('iconCar', imgCar)
+        imgCar.src = iconCar
+      }
   
+  
+  
+      // .................
+      //В роли 'symbol' - svg-IMG. V-2.
+      import routeCircle from '../assets/svg/route-circle.svg'
+      
       if (!this.map.hasImage('routeCircle')) {   //загрузка img в ресурс карты.
         let img = new Image(30, 30)    //создали пустую болванку для img.
         img.onload = () => this.map.addImage('routeCircle', img)
@@ -269,6 +283,27 @@ map.getSource(sourceName)
     'type': 'FeatureCollection',
     'features': features
   })
+
+//или
+var geojson = {
+  'type': 'FeatureCollection',
+  'features': [
+    {
+      'type': 'Feature',
+      'geometry': {
+        'type': 'LineString',
+        'coordinates': [[0, 0]]
+      }
+    }
+  ]
+}
+map.addSource('line', {
+  'type': 'geojson',
+  'data': geojson
+})
+geojson.features[0].geometry.coordinates.push([x, y])
+map.getSource('line').setData(geojson)
+
 
 
 
@@ -377,7 +412,18 @@ map.on('mouseleave', 'states-layer', function () {
 
 map.getStyle().layers  //получение списка существующих слоев. В том числе БАЗИСНОЙ КАРТЫ(!),
 //И далее ими МОЖНО УПРАВЛЯТЬ(!)
+
+var firstSymbolId   //найти следи всех слоев тот, который имеет 'symbol'-отоюражение.
+for (var i = 0; i < layers.length; i++) {
+  if (layers[i].type === 'symbol') {
+    firstSymbolId = layers[i].id;
+    break;
+  }
+}
 map.setPaintProperty(layerId, 'fill-color', color)      //изменение значения Paint-параметра у слоя
+map.setPaintProperty(firstSymbolId, 'fill-color', color)
+
+
 
 
 map.getLayer({})  //проверка наличия слоя

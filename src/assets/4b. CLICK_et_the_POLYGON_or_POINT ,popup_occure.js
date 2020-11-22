@@ -149,3 +149,27 @@ export default {
     })
   }
 }
+
+
+
+//...............
+//ПОЛЕЗНОЕ
+
+//Запрос данных ресурса
+let coordinates = map.getSource(id)._data.features[0].geometry.coordinates
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

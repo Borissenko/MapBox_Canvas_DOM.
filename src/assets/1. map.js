@@ -10,6 +10,7 @@ export default {
     //прикрутили ТОКЕН, который генерируется в личном кабинете компании https://account.mapbox.com/
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g'  // my
     //En-lng map: mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZnNic20wMzlrMnFxa3didHFyYzFzIn0.RdgEdp7LaXIslsPrEGpwmA';  // чужой, АНГЛОЯЗЫЧНЫЕ названия, рабочий
+    //  mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZnNic20wMzlrMnFxa3didHFyYzFzIn0.RdgEdp7LaXIslsPrEGpwmA'
     
     //ГЕНЕРАЦИЯ ЭКЗЕМПЛЯРА карты, map_instance.
     //https://docs.mapbox.com/mapbox-gl-js/api/map/ - методы map.
@@ -25,7 +26,11 @@ export default {
     })
     
     
+    
+    
     //CLICK в ЛЮБОЙ ТОЧКЕ КАРТЫ.
+    //Обработчик относится КО ВСЕЙ карте, поэтому его не требуется прописывать в map.on('load', ...).
+    
     map.on('click', (e) => {                //https://docs.mapbox.com/mapbox-gl-js/api/events/#evented#on
       console.log(e)    //в event есть ГЕОГРАФИЧЕСКИЕ и БРОУЗЕРНЫЕ координаты клика(!)
       
@@ -39,20 +44,20 @@ export default {
       //User interaction handlers - https://docs.mapbox.com/mapbox-gl-js/api/handlers/#boxzoomhandler
       
       
-      //Получить все фичи всех слоев, которые находяться в точке клика.
-      e.point      //{x: 681, y: 190} - координаты клика по диву с картой.
+      //Получить все фичи всех слоев, которые находяться в ТОЧКЕ клика.
+      e.point      //{x: 681, y: 190} - DOM-координаты клика при клике по диву с картой.
       var features = map.queryRenderedFeatures(e.point)  //Все ФИЧИ ВСЕХ слоев, которые проходят в этой точке.
       
       
-      //Все features, попадающие в квадрат карты, где центр квадрата - в точке клика
-      // + (!) принадлежат только слою 'my-layer-name'.
+      //Все features, попадающие в КВАДРАТ КАРТЫ, где центр квадрата - в точке клика    //https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures-around-point/
+      // + (!) принадлежат только слою 'my-layer-name' и 'libraries'.
       let point = {x: e.point.x, y: e.point.y}
       var width = 10;
       var height = 20;
       var features = map.queryRenderedFeatures([
         [point.x - width / 2, point.y - height / 2],
         [point.x + width / 2, point.y + height / 2]
-      ], {layers: ['my-layer-name']});
+      ], {layers: ['my-layer-name', 'libraries']});
       
       
     })

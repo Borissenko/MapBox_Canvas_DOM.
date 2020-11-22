@@ -25,7 +25,7 @@ map.addLayer({
 
 
 //filterProperty:
-filter: ['==', ['number', ['get', 'age']], 15]    //выведутся только Feature, у которых properties.age == 15.
+filterProperty: ['==', ['number', ['get', 'age']], 15]    //выведутся только Feature, у которых properties.age == 15.
 
 
 
@@ -35,12 +35,6 @@ filter: ['==', ['number', ['get', 'age']], 15]    //выведутся толь�
 var filterHour = ['==', ['number', ['get', 'Hour']], 12]
 var filterDay = ['!=', ['string', ['get', 'Day']], 'placeholder']  //это для All, т.к. для аргументов 'collisions' не д.б. null.
 map.setFilter('collisions', ['all', filterHour, filterDay])
-
-
-
-
-
-
 
 const data = {
   "type": "FeatureCollection",
