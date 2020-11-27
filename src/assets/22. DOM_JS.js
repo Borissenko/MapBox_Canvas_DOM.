@@ -1,15 +1,33 @@
 //Работа с DOM
 
+let el = document.createElement('canvas')
 
 
-el.classList.contains('класс')   //содержит ли элемент данный класс
+el.id = "marker-" + feature.properties.id      //add id=""
+el.setAttribute('id', 'gg')  //add id="" too.
+el.setAttribute('tabindex', '-1')  //add attribute "tabindex='-1".
+el.innerHTML = `<div  id="${feature.properties.id}" data-action-name="${feature.properties.title}">GO</div>`
+el.title = 'Привет!'
+//CSS
+el.className = 'my_marker'
+el.style.backgroundImage = 'url(https://placekitten.com/g/' + marker.properties.iconSize.join('/') + '/)'
+el.style.width = feature.properties.iconSize[0] + 'px';
+el.style.height = feature.properties.iconSize[1] + 'px'
 
-el.classList.toggle('класс')     //добавление-удаление класса
+
+
+//манипуляции
+let canvasEl = document.getElementById('canvasID')
+
+canvasEl.classList.contains('класс')   //содержит ли элемент данный класс
+canvasEl.classList.toggle('класс')     //добавление-удаление класса
 //Если класс у элемента есть, метод classList.toggle ведёт себя как classList.remove и класс у элемента убирает.
 //А если указанного класса у элемента нет, то classList.toggle, как и classList.add, добавляет элементу этот класс.
 
 
 
+
+//.......................
 //ОБРАБОТЧИКИ
 1. Событие - возникновение видимости у элемента.
 el.addEventListener('visibilitychange', function () {   //when the content of its tab have become visible or have been hidden.
@@ -29,9 +47,7 @@ if (el.visibilityState === 'visible') {
 
 
 
-
-
-
+//.......................
 //КНОПКА включения-выключения чего-либо
 <button id="pause"></button>  //текст на кнопке задается в CSS.
 

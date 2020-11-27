@@ -220,12 +220,17 @@ export default {
       
       
       // .................
+      // Удаление картинки из ресурса карты
+      if (map.hasImage(imgName)) map.removeImage(imgName)
+      
+  
+      // .................
       // Добавление картинки в ресурс
       import iconCar from './iconCar.'
       
-      if (!this.map.hasImage('iconCar')) {
+      if (!map.hasImage('iconCar')) {
         let imgCar = new Image(20, 24);
-        imgCar.onload = () => this.map.addImage('iconCar', imgCar)
+        imgCar.onload = () => map.addImage('iconCar', imgCar)
         imgCar.src = iconCar
       }
   
@@ -237,7 +242,7 @@ export default {
       
       if (!this.map.hasImage('routeCircle')) {   //загрузка img в ресурс карты.
         let img = new Image(30, 30)    //создали пустую болванку для img.
-        img.onload = () => this.map.addImage('routeCircle', img)
+        img.onload = () => map.addImage('routeCircle', img)
         img.src = routeCircle;
       }
   
