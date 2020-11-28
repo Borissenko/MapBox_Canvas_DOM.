@@ -16,6 +16,9 @@ console.log(dataURL)
 
 el.width   //ширина полотна
 el.height  //высота полотна
+ctx.canvas.width
+ctx.canvas.height
+ctx.canvas.width = ctx.canvas.width   //перетирает все полотно набело.
 
 
 //Находиться ли точка в контуре.

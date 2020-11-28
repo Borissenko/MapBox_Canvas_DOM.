@@ -1,26 +1,31 @@
-//Работа с DOM
+<script>
+//РАБОТА с DOM
 
+//создать или акцептировать.
 let el = document.createElement('canvas')
+let canvasEl = document.getElementById('canvasID')
+let ch1 = el.firstChild
+
+document.body.appendChild(el)     //добавить el в корень html.
+
+el.parentNode.removeChild(el)    //удалить el, отталкиваясь от самого себя   )).
 
 
+//атрибуты
 el.id = "marker-" + feature.properties.id      //add id=""
 el.setAttribute('id', 'gg')  //add id="" too.
 el.setAttribute('tabindex', '-1')  //add attribute "tabindex='-1".
 el.innerHTML = `<div  id="${feature.properties.id}" data-action-name="${feature.properties.title}">GO</div>`
 el.title = 'Привет!'
+
 //CSS
 el.className = 'my_marker'
-el.style.backgroundImage = 'url(https://placekitten.com/g/' + marker.properties.iconSize.join('/') + '/)'
 el.style.width = feature.properties.iconSize[0] + 'px';
 el.style.height = feature.properties.iconSize[1] + 'px'
+el.style.backgroundImage = 'url(https://placekitten.com/img5)'
 
-
-
-//манипуляции
-let canvasEl = document.getElementById('canvasID')
-
-canvasEl.classList.contains('класс')   //содержит ли элемент данный класс
-canvasEl.classList.toggle('класс')     //добавление-удаление класса
+el.classList.contains('класс')        //содержит ли элемент данный класс
+el.classList.toggle('класс')     //добавление-удаление класса
 //Если класс у элемента есть, метод classList.toggle ведёт себя как classList.remove и класс у элемента убирает.
 //А если указанного класса у элемента нет, то classList.toggle, как и classList.add, добавляет элементу этот класс.
 
@@ -29,10 +34,18 @@ canvasEl.classList.toggle('класс')     //добавление-удален�
 
 //.......................
 //ОБРАБОТЧИКИ
-1. Событие - возникновение видимости у элемента.
+//A-вариант обработчика - el.addEventListener()
+//1.
+el.addEventListener('click', function (e) {
+  window.alert(feature.properties.message)
+  createPopUp(marker)
+})
+
+
+//2. Событие - возникновение видимости у элемента.
 el.addEventListener('visibilitychange', function () {   //when the content of its tab have become visible or have been hidden.
-   resetTime = true;
-});
+   resetTime = true
+})
 
 //аналогично можно использовать document.visibilityState
 if (el.visibilityState === 'visible') {
@@ -40,11 +53,24 @@ if (el.visibilityState === 'visible') {
 } else {
     //выключаем что-либо
 }
-
-НО(!) в разных броузерах это событие и св-во видимости называется по-разному!
-
+// НО(!) в разных броузерах это событие и св-во видимости называется по-разному!
 
 
+//B-вариант обработчика.
+let wrapperEl = document.createElement('div')
+
+//wrapperEl.getElementsByClassName('wrapper_child1')[0].onclick(f)   //срабатывает.
+//wrapperEl.getElementById('childId').onclick(f)              //НЕ срабатывает почему-то.
+wrapperEl.querySelector("#childId")                 // а так, с использованием id, - срабатывает.
+  .onclick ( e => {
+  console.log('gg')                               // сразу можем что-то сделать, т.к. уже прицелены.
+  const actionName = e.target.dataset.actionName  //дополнительно отбираем по [data-action-name="55"].
+  if (feature.properties.id) {                    //дополнительно отбираем по feature.properties.id.
+    console.log('doIt()')
+  }
+})
+
+</script>
 
 
 //.......................
@@ -63,8 +89,9 @@ pauseButton.addEventListener('click', function () {
      //выключаем что-либо
   }
 })
-</script>
 
+
+</script>
 <style>
 button {
   position: absolute;
@@ -77,5 +104,22 @@ button {
   content: 'Go';
 }
 </style>
+
+//.......................
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

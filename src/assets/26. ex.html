@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="application/javascript">
+    function draw() {
+      var canvas = document.getElementById("canvas");
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        let fillColor = 'red'
+  
+        ctx.arc(14,24,3.7,0,Math.PI*2,true);
+        ctx.fillStyle = fillColor;
+        ctx.fill();
+  
+        ctx.beginPath();
+        ctx.lineWidth = 3
+        ctx.lineCap = 'round'
+        ctx.strokeStyle = fillColor;
+        ctx.moveTo(5, 10);
+        ctx.lineTo(14, 3);
+        ctx.lineTo(23, 10);
+  
+        ctx.moveTo(14, 2);
+        ctx.lineTo(14, 17);
+        ctx.stroke();
+      }
+    }
+  </script>
+</head>
+<body onload="draw();">
+<canvas id="canvas" width="150" height="150"></canvas>
+</body>
+</html>
