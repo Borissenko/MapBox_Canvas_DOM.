@@ -1,6 +1,9 @@
 <script>
 //РАБОТА с DOM
 
+//надо заботать:
+//https://monsterlessons.com/project/series/rabota-s-dom-derevom-v-javascript
+
 //создать или акцептировать.
 let el = document.createElement('canvas')
 let canvasEl = document.getElementById('canvasID')

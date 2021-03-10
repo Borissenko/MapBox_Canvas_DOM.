@@ -2,6 +2,18 @@
 <html>
 <head>
   <script type="application/javascript">
+    let aa = {
+      a: function () {return this},
+      b: 3,
+      c: 4
+    }
+    console.log('1', aa.a())
+    let bb = aa.a
+    console.log('2', bb())
+    
+    
+    
+    
     function draw() {
       var canvas = document.getElementById("canvas");
       if (canvas.getContext) {

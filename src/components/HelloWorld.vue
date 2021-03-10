@@ -20,6 +20,8 @@ export default {
     ww: null
   }),
   mounted() {
+    
+    
     mapboxgl.accessToken = 'pk.eyJ1IjoibmljazAxNiIsImEiOiJja2doZno4am0wM2M5MnlxazM0Nmw2ZDhnIn0.0i8-KDxG6rT0r-p3NomT0g'  //my
     var map = new mapboxgl.Map({
       container: 'map',
