@@ -10,7 +10,7 @@ let popup = new mapboxgl.Popup({
   closeOnClick: true,  // закрыть попап при клике аутсайд
   offset: 25
 })
-.setLngLat([37.618425, 55.751247])
+.setLngLat([37.618425, 55.751247])   //СМЕЩАТЬ попап относительно координаты МАРКЕРА надо by  transform: translate(0, 40px); (!) [37.618425, 55.751247]- координата маркера, к которому мы привязываем попап.
 .setHTML(`
                 <div id="popup1">
                   <div>GO!</div>
@@ -20,6 +20,9 @@ let popup = new mapboxgl.Popup({
          `)
 //.setText('Go!') - вместо .setHTML() можно использовать. Более простой вариант.
 .addTo(map)
+
+// ## СМЕЩАТЬ попап относительно координаты МАРКЕРА
+// СМЕЩАТЬ попап надо by  transform: translate(0, 40px); (!)
 
 
 

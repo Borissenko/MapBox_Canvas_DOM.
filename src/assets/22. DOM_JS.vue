@@ -1,30 +1,24 @@
 <script>
 //РАБОТА с DOM
-<<<<<<< HEAD:src/assets/22. DOM_JS.vue
 
 //надо заботать:
 //https://monsterlessons.com/project/series/rabota-s-dom-derevom-v-javascript
-=======
->>>>>>> 7b2f82e7344cd19b52fc766a74dfd7c0661b1c42:src/assets/22. DOM_JS.vue
+
 
 //создать или акцептировать.
 let el = document.createElement('canvas')
+let el = document.createElement('div')
+
 let canvasEl = document.getElementById('canvasID')
-let ch1 = el.firstChild
+let chaild_1 = el.firstChild
+
 
 document.body.appendChild(el)     //добавить el в корень html.
-<<<<<<< HEAD:src/assets/22. DOM_JS.vue
-
-el.parentNode.removeChild(el)    //удалить el, отталкиваясь от самого себя   )).
-=======
->>>>>>> 7b2f82e7344cd19b52fc766a74dfd7c0661b1c42:src/assets/22. DOM_JS.vue
 
 el.parentNode.removeChild(el)    //удалить el, отталкиваясь от самого себя   )).
 
-<<<<<<< HEAD:src/assets/22. DOM_JS.vue
-=======
 
->>>>>>> 7b2f82e7344cd19b52fc766a74dfd7c0661b1c42:src/assets/22. DOM_JS.vue
+
 //атрибуты
 el.id = "marker-" + feature.properties.id      //add id=""
 el.setAttribute('id', 'gg')  //add id="" too.
@@ -34,6 +28,7 @@ el.title = 'Привет!'
 
 //CSS
 el.className = 'my_marker'
+el.classList.add("ok", "understand");
 el.style.width = feature.properties.iconSize[0] + 'px';
 el.style.height = feature.properties.iconSize[1] + 'px'
 el.style.backgroundImage = 'url(https://placekitten.com/img5)'
