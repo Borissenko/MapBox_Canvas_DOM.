@@ -82,6 +82,34 @@ wrapperEl.querySelector("#childId")                 // а так, с испол�
 </script>
 
 
+//C-вариант обработчика
+//вешаем на произвольный DOM-элемент из JS
+//декларируем с помощью небольшого плагина npm
+
+npm i hammerjs
+
+import Hammer from 'hammerjs'
+
+// get a reference to an element
+var stage = document.getElementById('stage');
+
+// create a manager for that element
+var manager = new Hammer.Manager(stage);
+
+// create a recognizer
+var Rotate = new Hammer.Rotate();
+
+// add the recognizer
+manager.add(Rotate);
+
+// subscribe to events
+manager.on('rotate', function(e) {
+// do something cool
+var rotation = Math.round(e.rotation);
+stage.style.transform = 'rotate('+rotation+'deg)';
+});
+
+
 //.......................
 //КНОПКА включения-выключения чего-либо
 <button id="pause"></button>  //текст на кнопке задается в CSS.

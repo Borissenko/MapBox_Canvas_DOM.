@@ -155,4 +155,32 @@ activeItem[0].classList.remove('active')  //удаление класса у э�
 
 
 
+//определяем координаты видимой области карты
+let coords2 = [];
+let canvas = this.map.getCanvas();
+let w = canvas.width;
+let h = canvas.height;
+coords2[0] = this.map.unproject([0,0]).toArray();
+coords2[1] = this.map.unproject([0,h]).toArray();
+coords2[2] = this.map.unproject([w,h]).toArray();
+coords2[3] = this.map.unproject([w,0]).toArray();
+let leftBottom = [coords2[0][0], coords2[0][1]];
+let topRight = [coords2[0][0], coords2[0][1]];
+coords2.forEach(item => {
+  if (leftBottom[0] > item[0]) leftBottom[0] = item[0];
+  if (leftBottom[1] > item[1]) leftBottom[1] = item[1];
+  if (topRight[0] < item[0]) topRight[0] = item[0];
+  if (topRight[1] < item[1]) topRight[1] = item[1];
+});
+
+//входит ли заданная точка в область видимо экрана на карте
+function isVisible (coords, leftBottomCoords, topRightCoords) {
+  let southWestCoords = leftBottomCoords || this.map.getBounds().getSouthWest();
+  let northEastCoords = topRightCoords || this.map.getBounds().getNorthEast();
+  if (coords[0] > southWestCoords.lng &&
+    coords[0] < northEastCoords.lng &&
+    coords[1] > southWestCoords.lat &&
+    coords[1] < northEastCoords.lat) return true;
+  return false;
+}
 

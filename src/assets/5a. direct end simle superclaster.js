@@ -16,14 +16,14 @@ export default {
     
     map.on('load', function () {
       // Add a new source from our GeoJSON data and
-      // set the 'cluster' option to true. GL-JS will
+      // set the 'cluster' option to true(<<<<< !). GL-JS will
       // add the point_count property to your source data.
       map.addSource('earthquakes', {
         type: 'geojson',
         // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
         // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
         data: points,       // like src/assets/geoJSON.js~points
-        cluster: true,
+        cluster: true,      //<< important(!)
         clusterMaxZoom: 14, // Max zoom to cluster points on
         clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50), in pixels.
       });

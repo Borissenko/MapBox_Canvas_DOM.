@@ -20,7 +20,7 @@ export default {
       container: 'map',        //id того дива, в который будет загружаться карта.
       style: 'mapbox://styles/mapbox/streets-v8',  // темный стиль карты - 'mapbox://styles/mapbox/dark-v10'
       center: [37.618423, 55.751244],   //[lng, lat], Долгота, широта. //let {longitude, latitude} = map.getCenter().
-      zoom: 12.5,
+      zoom: 12.5,     //0 - вся Земля, 15 - здания, 22 - самый большой.
       minZoom: 4,
       hash: false,
       showCompass: true

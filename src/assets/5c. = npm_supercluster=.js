@@ -1,9 +1,11 @@
 //слияние маркеров в кружок при изменении zoom.
 // используем плагин https://github.com/mapbox/supercluster
 
+// npm install supercluster
+
 import Supercluster from 'supercluster';
 
-import {points, lines, line, polygons} from '@/assets/geoJSON'
+import {points} from '@/assets/geoJSON'
 
 export default {
   mounted() {
@@ -21,44 +23,50 @@ export default {
       //1. инициируем суперкластеры
       const index = new Supercluster({
         radius: 40,
-        maxZoom: 16,
-        initial: function () {  //not real needed
+        maxZoom: 16,   //увеличивая до какого зумма будут кластеры еще формироваться.
+        //Кластерный feature состоит из
+        //- поле geometry: {type: "Point", coordinates: Array(2)}, значения которого возьмутся из feature цетральной точки.
+        //- поле properties.
+        //
+        //Поле properties содержит
+        // - автоматически создаваемые поля:
+        // cluster: true,
+        // cluster_id: 15,
+        // point_count: 5,
+        // point_count_abbreviated: 5,
+        // - нами декларируемые поля
+        
+        //initial описывает нами декларируемые поля (т.е. clusterFeature.properties)  и их начальное значение.
+        //Далее кластерный feature поступит в reduce() как centralPoint.
+        initial: function () {
           return {
-            count: 0,
-            sum: 0,
             min: Infinity,
-            max: -Infinity
+            max: -Infinity,
+            cameraNames: []  //<<<  НЕ ПОЙДЕТ!!! Значения должны быть СТРОКАМИ(!).
           };
         },
         map: (props) => {
-          //из каждой охватываемой в кластер точки формируется КЛАСТЕРНЫЙ ОБЪЕКТ, который здесь и ретерниться.
-          //аргумент props = features.properties каждой отдельной точки.
+          //из каждой охватываемой в кластер точки формируется ПРОМЕЖУТОЧНЫЙ объект, который здесь и ретерниться.
+          //props = features.properties каждой отдельной точки.
+          //Далее данный промежуточный объект итеративно поступает в reduce() как его surroundingPoint.
           return {
-            //1. имеет все поля features.properties, значения которых равны значениям полей ВБИРАЮЩЕЙ ТОЧКИ.
-            //2. дополнительные поля
+            //1. имеет все поля features.properties у точки, которая покрывается кластером.
+            //2. дополнительные поля, нами декларируемые.
             centralFeature: props,
-            idList: props.id,
-            // clusterCoordinates: props.properties
-            
-            //3. плюс кластерный объект имеет автоматически создаваемые поля:
-            //cluster: true,
-            // cluster_id: 15,
-            // point_count: 5,
-            // point_count_abbreviated: 5
+            cameraName: props.name,
           }
         },
         reduce: (centralPoint, surroundingPoint) => {
           //merges properties of surrounding clusters into central one,
-          //модифицируя отдельные поля ЦЕНТРАЛЬНОГО кластерного объекта.
-          centralPoint.idList += '=' + surroundingPoint.idList
+          //reduce - это циклическая функция, модифицируем отдельные поля кластерного объекта, отталкиваясь от features всех охватываемых кластером точек.
+          //surroundingPoint - в него на каждой итерации попадают промежуточные объекты всех ВБИРАЕМЫХ точек.
+          //centralPoint - это результат initial(), и далее centralPoint становиться фичей данного кластера.
+          centralPoint.cameraNames.push(surroundingPoint.cameraName)   //<<<  НЕ ПОЙДЕТ!!! Значения должны быть СТРОКАМИ(!).
         }
-        //reduce - это циклическая функция, в аргумент surroundingPoint последовательно на каждой итерации попадают кластерные объекты всех ВБИРАЕМЫХ точек.
-        //centralPoint и surroundingPoint - это кластерные объекты.
-        //centralPoint - изначально сформирован на базе ЦЕНТРАЛЬНОЙ точки, а далее его поля МОДИФИЦИРУЮТСЯ вбираемыми им точками.
       })
       
       
-      //3. загружаем точки в SC
+      //3. загружаем точки в SuperCluster
       index.load(points.features)  //НЕ points из geoJSON'a(!)
       
       
