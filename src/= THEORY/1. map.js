@@ -84,6 +84,7 @@ export default {
   
     map.rotateTo(180, {duration: 10000})  //плавное вращение карты
     map.resize()     //
+    let currentZoom = map.getZoom()    //определить текущий zoom карты.
     
     
   },

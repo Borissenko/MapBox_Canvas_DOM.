@@ -1,3 +1,4 @@
+<script src="1b. map.setFilter().js"></script>
 <script>
 //РАБОТА с DOM
 
@@ -13,9 +14,19 @@ let canvasEl = document.getElementById('canvasID')
 let chaild_1 = el.firstChild
 
 
+//добавить/удалить себя
 document.body.appendChild(el)     //добавить el в корень html.
-
 el.parentNode.removeChild(el)    //удалить el, отталкиваясь от самого себя   )).
+
+
+//инъекция дочек
+el.innerHTML = `<div  id="${feature.properties.id}" data-action-name="${feature.properties.title}">GO</div>`
+el.appendChild(node)    //внутрь el в роли его ПОСЛЕДНЕЙ  дочки вставляется <div> "node".
+el.insertBefore(node, nextNode)   //node вставляем непосредственно ПЕРЕД  уже имеющейся дочкой "nextNode".
+
+
+//удаление дочки
+el.removeChild(node)    //удалить дочку "node".
 
 
 
@@ -23,8 +34,8 @@ el.parentNode.removeChild(el)    //удалить el, отталкиваясь �
 el.id = "marker-" + feature.properties.id      //add id=""
 el.setAttribute('id', 'gg')  //add id="" too.
 el.setAttribute('tabindex', '-1')  //add attribute "tabindex='-1".
-el.innerHTML = `<div  id="${feature.properties.id}" data-action-name="${feature.properties.title}">GO</div>`
 el.title = 'Привет!'
+
 
 //CSS
 el.className = 'my_marker'
@@ -70,14 +81,46 @@ let wrapperEl = document.createElement('div')
 
 //wrapperEl.getElementsByClassName('wrapper_child1')[0].onclick(f)   //срабатывает.
 //wrapperEl.getElementById('childId').onclick(f)              //НЕ срабатывает почему-то.
-wrapperEl.querySelector("#childId")                 // а так, с использованием id, - срабатывает.
+wrapperEl.querySelector("#childId")                 //<<< а так, с использованием id(!), - СРАБАТЫВАЕТ.
   .onclick ( e => {
-  console.log('gg')                               // сразу можем что-то сделать, т.к. уже прицелены.
-  const actionName = e.target.dataset.actionName  //дополнительно отбираем по [data-action-name="55"].
-  if (feature.properties.id) {                    //дополнительно отбираем по feature.properties.id.
-    console.log('doIt()')
+    console.log('gg')                               // сразу можем что-то сделать, т.к. уже прицелены.
+
+    if(e.target.dataset.actionName === '55') {   // <<<< дополнительно отбираем по [data-action-name="55"].
+      console.log('doIt()')
+    }
+
+    if (feature.properties.id) {                    //дополнительно отбираем по feature.properties.id.
+      console.log('doIt()')
+    }
+  })
+
+//КЛИК ПО ОПРЕДЕЛЕННОЙ зоне попапа:
+//зауживаться в DOM попапа лучше не by wrapperEl.getElementsByClassName() or wrapperEl.querySelector(),
+//а лучше в целевом теге у попапа прописать еще один data-атрибут по типу data-action-type="addCamera"
+//и далее отсеиться внутри обработчика:
+
+popUpNode.onclick = (e) => {
+  let targetCameraName = e.target.dataset.cameraName
+  let targetActionType = e.target.dataset.actionType
+
+  // клик по определенным зонам попапа
+  switch (targetActionType) {
+    case 'addCamera':    //клик по иконке (+/-), выбранную камеру добавляем/удаляем в/из списка избранных.
+      let targetCamera = this.cameraList.find(camera => camera.CAMERA === targetCameraName);
+      this.$emit('clickedCamera', targetCamera);
+      this.clickedCameraFeature = feature;
+      popup.remove();
+      clearTimeout(this.popupTimeout);
+      break;
+
   }
-})
+}
+
+
+//CSS для дива с обработчиком
+// [data-action-name="close"] {
+//   cursor: pointer;
+// }
 
 </script>
 
@@ -104,10 +147,10 @@ manager.add(Rotate);
 
 // subscribe to events
 manager.on('rotate', function(e) {
-// do something cool
-var rotation = Math.round(e.rotation);
-stage.style.transform = 'rotate('+rotation+'deg)';
-});
+  // do something cool
+  var rotation = Math.round(e.rotation);
+  stage.style.transform = 'rotate('+rotation+'deg)';
+})
 
 
 //.......................
@@ -118,9 +161,9 @@ stage.style.transform = 'rotate('+rotation+'deg)';
 var pauseButton = document.getElementById('pause')
 
 pauseButton.addEventListener('click', function () {
-  pauseButton.classList.toggle('pause')   //присуждение-отмена класса для элемента. Меняем надпись на кнопке.
+  pauseButton.classList.toggle('go')   //присуждение-отмена класса для элемента. Меняем надпись на кнопке.
   
-  if (pauseButton.classList.contains('pause')) {
+  if (pauseButton.classList.contains('go')) {
      //включаем что-то
   } else {
      //выключаем что-либо
@@ -137,7 +180,7 @@ button {
 #pause::after {
   content: 'Пауза';   //текст на кнопке
 }
-#pause.pause::after {
+#pause.go::after {
   content: 'Go';
 }
 </style>

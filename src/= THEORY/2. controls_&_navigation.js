@@ -28,6 +28,12 @@ map.addControl(geolocateControl_1, "top-left")
 map.keyboard.enable()
 
 
+
+//определить текущий zoom карты.
+map.getZoom()
+
+
+
 //ПЕРЕЛЕТ в точку
 // https://docs.mapbox.com/mapbox-gl-js/example/flyto/
 // https://docs.mapbox.com/mapbox-gl-js/example/center-on-symbol/
