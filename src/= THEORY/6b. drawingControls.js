@@ -6,15 +6,15 @@ import mapboxgl from "mapbox-gl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 
 var draw = mapboxgl.Draw({    // create polygon and trash control
-  drawing: true,
+  drawing: true,      //<<отличие от варианта В).
   displayControlsDefault: false,
   controls: {
     polygon: true,
     trash: true
   }
 })
-map.addControl(draw) // add control to map
-draw.remove()        // remove polygon and trash control from map
+map.addControl(draw, 'top-right')   // add control to map
+draw.remove()                      // remove polygon and trash control from map
 
 
 //B-вариант)
@@ -81,18 +81,21 @@ map.addControl(new mapboxDrawDeleteAll(mapboxDraw_1, this), 'top-right');
 let polygons = []
 var _this = this  //внутри колбеков у map.on НЕТ ДОСТУПА к this компонента! this надо пробрасывать!
 
+
 // сохранение нарисованного полигона
 map.on('draw.create', function (e) {  //срабатывает при нажатии Enter после нарисования полигона.
   let id = e.features[0].id;
-  polygons[id] = e.features[0]
+  _this.polygons[id] = e.features[0]   //внутри колбеков у map.on НЕТ ДОСТУПА к this компонента! this надо пробрасывать!
 })
+
 
 //обновление полигона
 this.map.on('draw.update', function (e) {
   polygons[e.features[0].id] = e.features[0]
 });
 
-//УДАЛЕНИЕ ВЕДЕЛЕННОГО ПОЛИГОНА ПРИ КЛИКЕ НА контрол "trash".
+
+//УДАЛЕНИЕ ВЫДЕЛЕННОГО ПОЛИГОНА ПРИ КЛИКЕ НА контрол "trash".
 map.on('draw.delete', function (e) {
   console.log('e.features ====', e.features[0])
   e.features.forEach(delPoly => {
@@ -111,3 +114,41 @@ map.on('draw.update', function (e) {
 
 //Удаление всех
 MapboxDraw.deleteAll()
+
+
+//Нажимаем на кнопку "Рисование полигона" via JS.
+map.MapboxDraw.changeMode('draw_polygon')      //инициируем режим рисования полигона
+
+
+
+drawPolygon() {
+  let mode = this.$refs.map.MapboxDraw.getMode();
+  if (mode != 'draw_polygon') {
+    this.$refs.map.MapboxDraw.changeMode('draw_polygon'); //инициирует режим рисования полигона
+  } else {
+    this.$refs.map.MapboxDraw.changeMode('simple_select');
+  }
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

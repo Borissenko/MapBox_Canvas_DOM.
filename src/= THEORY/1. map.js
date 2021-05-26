@@ -17,7 +17,7 @@ export default {
     //https://docs.mapbox.com/mapbox-gl-js/api/map/ - методы map.
     //слоями базисной карты ТОЖЕ МОЖНО УПРАВЛЯТЬ(!). См. в 4а.addLayer.
     let map = new mapboxgl.Map({
-      container: 'map',        //id того дива, в который будет загружаться карта.
+      container: 'map',        //<<<<= id того дива, в который будет загружаться карта.
       style: 'mapbox://styles/mapbox/streets-v8',  // темный стиль карты - 'mapbox://styles/mapbox/dark-v10'
       center: [37.618423, 55.751244],   //[lng, lat], Долгота, широта. //let {longitude, latitude} = map.getCenter().
       zoom: 12.5,     //0 - вся Земля, 15 - здания, 22 - самый большой.
@@ -111,6 +111,35 @@ export default {
     }
   }
 }
+
+
+
+//Нажать на какую-либо "СТАНДАРТНУЮ КНОПКУ"
+mapboxDraw_1.changeMode('draw_polygon')     //инициирует режим рисования полигона
+mapboxDraw_1.changeMode('simple_select')    //остановить режим рисования
+
+//
+
+drawPolygon() {
+  let mode = tmapboxDraw_1.getMode();
+  if (mode != 'draw_polygon') {
+    mapboxDraw_1.changeMode('draw_polygon'); //инициирует режим рисования полигона
+  } else {
+    tmapboxDraw_1.changeMode('simple_select');
+  }
+},
+
+//
+mapResize() {
+  Vue.nextTick()
+      .then(() => {
+        this.$refs['map'].resize();
+      });
+},
+
+
+
+
 
 //  # ТУТОРИАЛ
 // https://www.mapbox.com/install/js/bundler-install/
