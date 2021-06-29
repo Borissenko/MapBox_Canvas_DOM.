@@ -439,3 +439,5 @@ map.setPaintProperty(layer.value, 'fill-color', color)      //изменение
 
 
 
+map.setFeatureState({ source: source, id: this.hoveredPointId }, { hover: true })      //<<=== (!)Update the state map of a feature within a style source.
+
