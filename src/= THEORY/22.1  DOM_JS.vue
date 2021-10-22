@@ -1,5 +1,3 @@
-<script src="1b. map.setFilter().js"></script>
-<script>
 //РАБОТА с DOM
 
 //надо заботать:
@@ -11,7 +9,7 @@ let el = document.createElement('canvas')
 let el = document.createElement('div')
 
 let canvasEl = document.getElementById('canvasID')
-let chaild_1 = el.firstChild
+let child_1 = el.firstChild
 
 
 //добавить/удалить себя
